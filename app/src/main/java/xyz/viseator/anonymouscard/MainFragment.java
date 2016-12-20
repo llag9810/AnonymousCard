@@ -3,6 +3,8 @@ package xyz.viseator.anonymouscard;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +20,9 @@ import butterknife.ButterKnife;
  */
 
 public class MainFragment extends Fragment {
-    @BindView(R.id.test_text)
-    TextView textView;
-    String name = " ";
+    @BindView(R.id.main_recyclerView)
+    RecyclerView recyclerView;
+    String name;
 
     public String getName() {
         return name;
@@ -33,9 +35,11 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.test_fregment, container, false);
+        View view = inflater.inflate(R.layout.main_fregment, container, false);
         ButterKnife.bind(this, view);
-        textView.setText(getName());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.hasFixedSize();
+        recyclerView.setAdapter(new MainRecyclerViewAdapter(getActivity()));
         return view;
     }
 }
