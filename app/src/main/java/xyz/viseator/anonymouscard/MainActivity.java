@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
     private DataPackage dataPackage;
     private Button mbuttonSend, mButtonJoin;
     private EditText editText;
-    private TextView textViewShowIP,textViewShowMac,textViewTitle;
+    private TextView textViewShowIP, textViewShowMac, textViewTitle;
     private ComUtil comUtil = null;
     private Handler handler = new Handler() {
         @Override
@@ -39,13 +39,18 @@ public class MainActivity extends AppCompatActivity
                     byte[] data = (byte[]) msg.obj;
                     Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
                     ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
+                    UDPDataPackage udpDataPackage = new UDPDataPackage(null);
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
-                        UDPDataPackage udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
-                        textView.setText(udpDataPackage.getTitle());
+                        udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
+
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
+
+                    textViewTitle.setText(udpDataPackage.getTitle());
+                    textViewShowMac.setText(udpDataPackage.getMacAddress());
+                    textViewShowIP.setText(udpDataPackage.getIpAddress());
                     break;
             }
         }
@@ -60,11 +65,9 @@ public class MainActivity extends AppCompatActivity
         mButtonJoin = (Button) findViewById(R.id.join_group);
         mButtonJoin.setOnClickListener(this);
         editText = (EditText) findViewById(R.id.edit_msg);
-        //textView = (TextView) findViewById(R.id.show_rec_content);
-        //textView.setText(GetNetworkInfo.getIp(this) + " " + GetNetworkInfo.getMac(this));
-        textViewShowIP=(TextView)findViewById(R.id.show_ip);
-        textViewShowMac=(TextView)findViewById(R.id.show_mac);
-        textViewTitle=(TextView)findViewById(R.id.show_title);
+        textViewShowIP = (TextView) findViewById(R.id.show_ip);
+        textViewShowMac = (TextView) findViewById(R.id.show_mac);
+        textViewTitle = (TextView) findViewById(R.id.show_title);
         comUtil = new ComUtil(handler);
         dataPackage = new DataPackage();
 
