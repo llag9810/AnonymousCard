@@ -3,6 +3,7 @@
     <color name="colorPrimary">#1E8AE8</color>
     <color name="colorPrimaryDark">#4c829e</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="mainBackground">#abdddc</color>
     <color name="mer">#4c829e</color>
     <color name="zhihuwordgray">#9DA8AF</color>
     <color name="White">#FFFFFF</color>

@@ -24,6 +24,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,7 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="35dp"
-            android:layout_marginTop="?android:attr/actionBarSize"
             android:background="#eeeeee"
             >
 
@@ -43,7 +43,7 @@
             android:id="@+id/tab_layout"
             style="@style/tab_style"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/tablayout_background"
             app:tabIndicatorHeight="0dp"
