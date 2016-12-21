@@ -10,45 +10,61 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+
+import xyz.viseator.anonymouscard.data.DataPackage;
+import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.network.ComUtil;
+import xyz.viseator.anonymouscard.network.GetNetworkInfo;
 
 public class MainActivity extends AppCompatActivity
-                            implements View.OnClickListener{
-    private Button mbuttonSend,mButtonJoin;
+        implements View.OnClickListener {
+    private DataPackage dataPackage;
+    private Button mbuttonSend, mButtonJoin;
     private EditText editText;
     private TextView textView;
-    private ComUtil comUtil=null;
-    private Handler handler=new Handler(){
+    private ComUtil comUtil = null;
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
-                    String str=(String)msg.obj;
-                    Toast.makeText(MainActivity.this,str,Toast.LENGTH_SHORT).show();
+                    String str = (String) msg.obj;
+                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
                     textView.setText(str);
                     break;
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mbuttonSend=(Button)findViewById(R.id.send_msg);
+        mbuttonSend = (Button) findViewById(R.id.send_msg);
         mbuttonSend.setOnClickListener(this);
-        mButtonJoin=(Button)findViewById(R.id.join_group);
+        mButtonJoin = (Button) findViewById(R.id.join_group);
         mButtonJoin.setOnClickListener(this);
-        editText=(EditText)findViewById(R.id.edit_msg);
-        textView=(TextView)findViewById(R.id.show_rec_content);
-        comUtil=new ComUtil(handler);
+        editText = (EditText) findViewById(R.id.edit_msg);
+        textView = (TextView) findViewById(R.id.show_rec_content);
+        textView.setText(GetNetworkInfo.getIp(this) + " " + GetNetworkInfo.getMac(this));
+        comUtil = new ComUtil(handler);
+        dataPackage = new DataPackage();
+
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.send_msg:
-                String str=editText.getText().toString();
+                String str = editText.getText().toString();
+                dataPackage.setTitle(str);
+                dataPackage.setIpAddress(GetNetworkInfo.getIp(this));
+                dataPackage.setMacAddress(GetNetworkInfo.getMac(this));
+                UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
+                ByteArrayOutputStream dataPackage = new ByteArrayOutputStream();
+                byte[] data = dataPackage.toByteArray();
                 comUtil.broadCast(str);
                 break;
             case R.id.join_group:
@@ -56,4 +72,6 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
+
 }
