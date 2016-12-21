@@ -11,8 +11,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import xyz.viseator.anonymouscard.data.DataPackage;
@@ -34,10 +36,16 @@ public class MainActivity extends AppCompatActivity
             super.handleMessage(msg);
             switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
-                    byte[] str = (byte[]) msg.obj;
-                    String strj = new String(str);
-                    Toast.makeText(MainActivity.this, "RE", Toast.LENGTH_SHORT).show();
-                    textView.setText(strj);
+                    byte[] data = (byte[]) msg.obj;
+                    Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
+                    ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
+                    try {
+                        ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
+                        UDPDataPackage udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
+                        textView.setText(udpDataPackage.getTitle());
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }
@@ -67,15 +75,19 @@ public class MainActivity extends AppCompatActivity
                 dataPackage.setTitle(str);
                 dataPackage.setIpAddress(GetNetworkInfo.getIp(this));
                 dataPackage.setMacAddress(GetNetworkInfo.getMac(this));
+
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
+
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 ObjectOutputStream outputStream;
+
                 try {
                     outputStream = new ObjectOutputStream(byteArrayOutputStream);
                     outputStream.writeObject(udpDataPackage);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 byte[] data = byteArrayOutputStream.toByteArray();
                 Log.d(TAG, String.valueOf(data));
                 comUtil.broadCast(data);
