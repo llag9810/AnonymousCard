@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
         editText = (EditText) findViewById(R.id.edit_msg);
         textViewShowIP = (TextView) findViewById(R.id.show_ip);
         textViewShowMac = (TextView) findViewById(R.id.show_mac);
+        textViewShowMac .setText(GetNetworkInfo.getMac());
         textViewTitle = (TextView) findViewById(R.id.show_title);
         comUtil = new ComUtil(handler);
         dataPackage = new DataPackage();
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity
                 String str = "Test Title";
                 dataPackage.setTitle(str);
                 dataPackage.setIpAddress(GetNetworkInfo.getIp(this));
-                dataPackage.setMacAddress(GetNetworkInfo.getMac(this));
+                dataPackage.setMacAddress(GetNetworkInfo.getMac());
 
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
 
