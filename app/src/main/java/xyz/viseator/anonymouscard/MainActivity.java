@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
                 case ComUtil.BROADCAST_PORT:
                     String str=(String)msg.obj;
                     Toast.makeText(MainActivity.this,str,Toast.LENGTH_SHORT).show();
+                    textView.setText(str);
                     break;
             }
         }
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.send_msg:
-                comUtil.broadCast("hello world");
+                String str=editText.getText().toString();
+                comUtil.broadCast(str);
                 break;
             case R.id.join_group:
                 comUtil.startRecieveMsg();

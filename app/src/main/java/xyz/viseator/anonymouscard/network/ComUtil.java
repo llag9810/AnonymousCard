@@ -14,7 +14,7 @@ import java.net.MulticastSocket;
 
 public class ComUtil {
     public static final String CHARSET="utf-8";
-    private static final String BROADCAST_IP="228.5.6.7"; //IP协议中特殊IP地址，作为一个组，用来集合加入的所有客户端
+    private static final String BROADCAST_IP="224.0.1.2"; //IP协议中特殊IP地址，作为一个组，用来集合加入的所有客户端
     public static final int BROADCAST_PORT=7816; //广播目的端的端口号,客户端的端口号是服务端端口号+1
     private static final int DATA_LEN = 4096;
     private MulticastSocket socket = null;
