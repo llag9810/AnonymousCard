@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity
                     byte[] data = (byte[]) msg.obj;
                     Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
                     ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
-                    UDPDataPackage udpDataPackage = new UDPDataPackage(null);
+                    DataPackage dataPackage = new DataPackage();
+                    UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
                         udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
