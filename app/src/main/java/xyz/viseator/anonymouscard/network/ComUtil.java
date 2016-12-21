@@ -29,15 +29,15 @@ public class ComUtil {
     }
 
     // 广播消息的工具方法
-    public void broadCast(final String msg)
+    public void broadCast(final byte[] msg)
     {
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
                 try
                 {
-                    byte[] buff = msg.getBytes(CHARSET);
-                    outPacket.setData(buff);
+                    //byte[] buff = msg.getBytes(CHARSET);
+                    outPacket.setData(msg);
                     socket.send(outPacket);
                 }
                 // 捕捉异常
@@ -62,10 +62,10 @@ public class ComUtil {
             while(true){
                 try {
                     socket.receive(inPacket);
-                    String msg=new String(inBuff,0,inPacket.getLength(),CHARSET);
+                    //String msg=new String(inBuff,0,inPacket.getLength(),CHARSET);
                     Message message=new Message();
                     message.what=BROADCAST_PORT;
-                    message.obj=msg;
+                    message.obj=inBuff;
                     handler.sendMessage(message);
                 } catch (IOException e) {
                     e.printStackTrace();
