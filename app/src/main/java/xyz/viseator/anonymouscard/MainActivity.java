@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
@@ -19,6 +22,7 @@ import xyz.viseator.anonymouscard.network.GetNetworkInfo;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener {
+    private static final String TAG = "wudi MainActivity";
     private DataPackage dataPackage;
     private Button mbuttonSend, mButtonJoin;
     private EditText editText;
@@ -30,9 +34,10 @@ public class MainActivity extends AppCompatActivity
             super.handleMessage(msg);
             switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
-                    String str = (String) msg.obj;
-                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
-                    textView.setText(str);
+                    byte[] str = (byte[]) msg.obj;
+                    String strj = new String(str);
+                    Toast.makeText(MainActivity.this, "RE", Toast.LENGTH_SHORT).show();
+                    textView.setText(strj);
                     break;
             }
         }
@@ -58,14 +63,22 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.send_msg:
-                String str = editText.getText().toString();
+                String str = "Test Title";
                 dataPackage.setTitle(str);
                 dataPackage.setIpAddress(GetNetworkInfo.getIp(this));
                 dataPackage.setMacAddress(GetNetworkInfo.getMac(this));
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
-                ByteArrayOutputStream dataPackage = new ByteArrayOutputStream();
-                byte[] data = dataPackage.toByteArray();
-                comUtil.broadCast(str);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                ObjectOutputStream outputStream;
+                try {
+                    outputStream = new ObjectOutputStream(byteArrayOutputStream);
+                    outputStream.writeObject(udpDataPackage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                byte[] data = byteArrayOutputStream.toByteArray();
+                Log.d(TAG, String.valueOf(data));
+                comUtil.broadCast(data);
                 break;
             case R.id.join_group:
                 comUtil.startRecieveMsg();
