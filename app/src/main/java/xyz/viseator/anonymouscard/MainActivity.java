@@ -18,6 +18,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.network.ComUtil;
@@ -40,15 +41,8 @@ public class MainActivity extends AppCompatActivity
                 case ComUtil.BROADCAST_PORT:
                     byte[] data = (byte[]) msg.obj;
                     Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
-                    ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
-                    DataPackage dataPackage = new DataPackage();
-                    UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
-                    try {
-                        ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
-                        udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+
+                    UDPDataPackage udpDataPackage = ConvertData.ByteToDataPackage(data);
                     if (!receivedIds.contains(udpDataPackage.getId())) {
                         receivedIds.add(udpDataPackage.getId());
                         textViewTitle.setText(udpDataPackage.getTitle());
@@ -90,17 +84,8 @@ public class MainActivity extends AppCompatActivity
                 dataPackage.setId(1);
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
 
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                ObjectOutputStream outputStream;
 
-                try {
-                    outputStream = new ObjectOutputStream(byteArrayOutputStream);
-                    outputStream.writeObject(udpDataPackage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                byte[] data = byteArrayOutputStream.toByteArray();
+                byte[] data = ConvertData.DataPackageToByte(udpDataPackage);
                 Log.d(TAG, String.valueOf(data));
                 for (int i = 0; i < 3; i++)
                     comUtil.broadCast(data);
