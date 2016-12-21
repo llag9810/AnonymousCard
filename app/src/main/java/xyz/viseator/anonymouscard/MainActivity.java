@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
     private DataPackage dataPackage;
     private Button mbuttonSend, mButtonJoin;
     private EditText editText;
-    private TextView textView;
+    private TextView textViewShowIP,textViewShowMac,textViewTitle;
     private ComUtil comUtil = null;
     private Handler handler = new Handler() {
         @Override
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
                     byte[] str = (byte[]) msg.obj;
                     String strj = new String(str);
                     Toast.makeText(MainActivity.this, "RE", Toast.LENGTH_SHORT).show();
-                    textView.setText(strj);
+                    //textView.setText(strj);
                     break;
             }
         }
@@ -52,8 +52,11 @@ public class MainActivity extends AppCompatActivity
         mButtonJoin = (Button) findViewById(R.id.join_group);
         mButtonJoin.setOnClickListener(this);
         editText = (EditText) findViewById(R.id.edit_msg);
-        textView = (TextView) findViewById(R.id.show_rec_content);
-        textView.setText(GetNetworkInfo.getIp(this) + " " + GetNetworkInfo.getMac(this));
+        //textView = (TextView) findViewById(R.id.show_rec_content);
+        //textView.setText(GetNetworkInfo.getIp(this) + " " + GetNetworkInfo.getMac(this));
+        textViewShowIP=(TextView)findViewById(R.id.show_ip);
+        textViewShowMac=(TextView)findViewById(R.id.show_mac);
+        textViewTitle=(TextView)findViewById(R.id.show_title);
         comUtil = new ComUtil(handler);
         dataPackage = new DataPackage();
 
