@@ -11,11 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import xyz.viseator.anonymouscard.data.ConvertData;
@@ -42,7 +37,7 @@ public class MainActivity extends AppCompatActivity
                     byte[] data = (byte[]) msg.obj;
                     Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
 
-                    UDPDataPackage udpDataPackage = ConvertData.ByteToDataPackage(data);
+                    UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.ByteToObject(data);
                     if (!receivedIds.contains(udpDataPackage.getId())) {
                         receivedIds.add(udpDataPackage.getId());
                         textViewTitle.setText(udpDataPackage.getTitle());
@@ -85,7 +80,7 @@ public class MainActivity extends AppCompatActivity
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
 
 
-                byte[] data = ConvertData.DataPackageToByte(udpDataPackage);
+                byte[] data = ConvertData.ObjectToByte(udpDataPackage);
                 Log.d(TAG, String.valueOf(data));
                 for (int i = 0; i < 3; i++)
                     comUtil.broadCast(data);

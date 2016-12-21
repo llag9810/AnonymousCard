@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * Created by viseator on 2016/12/21.
@@ -13,28 +14,27 @@ import java.io.ObjectOutputStream;
  */
 
 public class ConvertData {
-    public static byte[] DataPackageToByte(UDPDataPackage udpDataPackage) {
+    public static byte[] ObjectToByte(Serializable object) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream outputStream;
         try {
             outputStream = new ObjectOutputStream(byteArrayOutputStream);
-            outputStream.writeObject(udpDataPackage);
+            outputStream.writeObject(object);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static UDPDataPackage ByteToDataPackage(byte[] bytes) {
+    public static Object ByteToObject(byte[] bytes) {
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
-        DataPackage dataPackage = new DataPackage();
-        UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
+        Object object = null;
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
-            udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
+            object = objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return udpDataPackage;
+        return object;
     }
 }

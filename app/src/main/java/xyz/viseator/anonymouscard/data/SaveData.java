@@ -2,6 +2,7 @@ package xyz.viseator.anonymouscard.data;
 
 import android.content.Context;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,5 +32,25 @@ public class SaveData {
         }
     }
 
+    public static byte[] readFromFile(Context context, String fileName) {
+        FileInputStream fis = null;
+        byte[] data = null;
+        try {
+            fis = context.openFileInput(fileName + ".txt");
+            data = new byte[fis.available()];
+            fis.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+            }
+        }
+        return data;
+    }
 }
