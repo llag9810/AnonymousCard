@@ -17,7 +17,17 @@ public class DataPackage implements Serializable {
     private String macAddress;
     private String title;
     private String content;
+    private String id;
     private ArrayList<Bitmap> contentPics;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = macAddress + "_" + String.valueOf(id);
+    }
 
     public String getIpAddress() {
         return ipAddress;

@@ -13,11 +13,17 @@ public class UDPDataPackage implements Serializable {
     private String ipAddress;
     private String macAddress;
     private String title;
+    private String id;
 
     public UDPDataPackage(DataPackage dataPackage) {
         ipAddress = dataPackage.getIpAddress();
         macAddress = dataPackage.getMacAddress();
         title = dataPackage.getTitle();
+        id = dataPackage.getId();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getIpAddress() {

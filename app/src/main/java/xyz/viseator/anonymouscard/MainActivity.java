@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity
     private EditText editText;
     private TextView textViewShowIP, textViewShowMac, textViewTitle;
     private ComUtil comUtil = null;
+    private ArrayList<String> receivedIds;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -44,14 +46,15 @@ public class MainActivity extends AppCompatActivity
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
                         udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
-
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-
-                    textViewTitle.setText(udpDataPackage.getTitle());
-                    textViewShowMac.setText(udpDataPackage.getMacAddress());
-                    textViewShowIP.setText(udpDataPackage.getIpAddress());
+                    if (!receivedIds.contains(udpDataPackage.getId())) {
+                        receivedIds.add(udpDataPackage.getId());
+                        textViewTitle.setText(udpDataPackage.getTitle());
+                        textViewShowMac.setText(udpDataPackage.getMacAddress());
+                        textViewShowIP.setText(udpDataPackage.getIpAddress());
+                    }
                     break;
             }
         }
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        receivedIds = new ArrayList<>();
         mbuttonSend = (Button) findViewById(R.id.send_msg);
         mbuttonSend.setOnClickListener(this);
         mButtonJoin = (Button) findViewById(R.id.join_group);
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         editText = (EditText) findViewById(R.id.edit_msg);
         textViewShowIP = (TextView) findViewById(R.id.show_ip);
         textViewShowMac = (TextView) findViewById(R.id.show_mac);
-        textViewShowMac .setText(GetNetworkInfo.getMac());
+        textViewShowMac.setText(GetNetworkInfo.getMac());
         textViewTitle = (TextView) findViewById(R.id.show_title);
         comUtil = new ComUtil(handler);
         dataPackage = new DataPackage();
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity
                 dataPackage.setTitle(str);
                 dataPackage.setIpAddress(GetNetworkInfo.getIp(this));
                 dataPackage.setMacAddress(GetNetworkInfo.getMac());
-
+                dataPackage.setId(1);
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -98,7 +102,8 @@ public class MainActivity extends AppCompatActivity
 
                 byte[] data = byteArrayOutputStream.toByteArray();
                 Log.d(TAG, String.valueOf(data));
-                comUtil.broadCast(data);
+                for (int i = 0; i < 3; i++)
+                    comUtil.broadCast(data);
                 break;
             case R.id.join_group:
                 comUtil.startRecieveMsg();
