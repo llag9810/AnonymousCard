@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setSelectedTabIndicatorHeight(4);
-
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_action_achievement);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_action_achievement);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_action_achievement);
