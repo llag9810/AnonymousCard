@@ -4,6 +4,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,9 +29,15 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), this));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setSelectedTabIndicatorHeight(4);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_action_achievement);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_action_achievement);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_action_achievement);
+        View view1 = getLayoutInflater().inflate(R.layout.tab_view, null);
+        ((ImageView) view1.findViewById(R.id.tab_image)).setImageResource(R.drawable.left_icon_selector);
+        View view2 = getLayoutInflater().inflate(R.layout.tab_view, null);
+        ((ImageView) view2.findViewById(R.id.tab_image)).setImageResource(R.drawable.center_icon_selector);
+        View view3 = getLayoutInflater().inflate(R.layout.tab_view, null);
+        ((ImageView) view3.findViewById(R.id.tab_image)).setImageResource(R.drawable.right_icon_selector);
+
+        tabLayout.getTabAt(0).setCustomView(view1);
+        tabLayout.getTabAt(1).setCustomView(view2);
+        tabLayout.getTabAt(2).setCustomView(view3);
     }
 }
