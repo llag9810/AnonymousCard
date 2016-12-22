@@ -2,6 +2,7 @@ package xyz.viseator.anonymouscard.network;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,6 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 
+import xyz.viseator.anonymouscard.MainActivity;
 import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackageInSingle;
 
@@ -44,6 +46,7 @@ public class SingleUtil {
                 try {
                     DataPackageInSingle data=new DataPackageInSingle();  //将来被替换
                     data.setSign(0);                                     //将来被替换
+                    data.setBitmap(MainActivity.bitmap);
                     byte[] bytes= ConvertData.ObjectToByte(data);         //将来被替换
                     DatagramPacket packet=new DatagramPacket(bytes,bytes.length,address);
                     singleSocket.send(packet);
@@ -91,6 +94,7 @@ public class SingleUtil {
                     DataPackageInSingle data=(DataPackageInSingle) ConvertData.ByteToObject(singleBuff);
                     int sign=data.getSign();
                     if(sign==1){
+                        Log.d("信息：","收到打包请求");
                         sendConcreteData(data.getId(),data.getMyIp());
                     }else{
                         Message msg=new Message();

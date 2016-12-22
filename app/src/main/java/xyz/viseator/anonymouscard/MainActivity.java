@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
+import xyz.viseator.anonymouscard.data.DataPackageInSingle;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.network.ComUtil;
 import xyz.viseator.anonymouscard.network.GetNetworkInfo;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private static String testIP = null;
     public static Context context;
     private ImageView imageView;
+    public static Bitmap bitmap;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -62,7 +64,9 @@ public class MainActivity extends AppCompatActivity
                     //}
                     break;
                 case SingleUtil.SINGLE_PORT:
-                    Toast.makeText(MainActivity.this, "收到私有信息", Toast.LENGTH_SHORT).show();
+                    DataPackageInSingle data1=(DataPackageInSingle) ConvertData.ByteToObject((byte[]) msg.obj);
+                    //imageView.setImageBitmap(data1.getBitmap());
+                    Toast.makeText(MainActivity.this,"soudao",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -121,8 +125,6 @@ public class MainActivity extends AppCompatActivity
                 singleUtil.startRecieveMsg();
                 break;
             case R.id.send_single:
-                String str1 = new String("hello world");
-                byte[] strb = str1.getBytes();
                 singleUtil.sendSingle1(testIP,"1",GetNetworkInfo.getIp(MainActivity.this));
                 break;
         }
@@ -133,12 +135,9 @@ public class MainActivity extends AppCompatActivity
         Uri uri = data.getData();
         ContentResolver contentResolver = this.getContentResolver();
         try {
-            Bitmap bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri));
-            imageView.setImageBitmap(bitmap);
+            bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
     }
 }
