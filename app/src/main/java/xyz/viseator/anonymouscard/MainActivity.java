@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
             switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
                     byte[] data = (byte[]) msg.obj;
-                    UDPDataPackage udpDataPackage = ConvertData.ByteToDataPackage(data);
+                    UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.ByteToObject(data);
                     if (!receivedIds.contains(udpDataPackage.getId())) {
                         Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
                         receivedIds.add(udpDataPackage.getId());
@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity
                 dataPackage.setMacAddress(GetNetworkInfo.getMac());
                 dataPackage.setId(1);
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
-                byte[] data = ConvertData.DataPackageToByte(udpDataPackage);
+
+
+                byte[] data = ConvertData.ObjectToByte(udpDataPackage);
                 Log.d(TAG, String.valueOf(data));
                 for (int i = 0; i < 3; i++)
                     comUtil.broadCast(data);
