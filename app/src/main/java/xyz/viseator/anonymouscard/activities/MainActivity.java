@@ -15,10 +15,12 @@ import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.ui.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int SEND_CARD = 1;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.float_button)
     public void clickFloatButton() {
         Intent intent = new Intent(this,SendNewCardActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,SEND_CARD);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SEND_CARD) {
+            if (resultCode == RESULT_OK) {
+
+            }
+        }
     }
 }
