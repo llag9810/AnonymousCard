@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity
             switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
                     byte[] data = (byte[]) msg.obj;
-                    Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
                     UDPDataPackage udpDataPackage = ConvertData.ByteToDataPackage(data);
                     if (!receivedIds.contains(udpDataPackage.getId())) {
+                        Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
                         receivedIds.add(udpDataPackage.getId());
                         textViewTitle.setText(udpDataPackage.getTitle());
                         textViewShowMac.setText(udpDataPackage.getMacAddress());
