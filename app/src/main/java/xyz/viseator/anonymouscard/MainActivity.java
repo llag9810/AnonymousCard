@@ -1,5 +1,13 @@
 package xyz.viseator.anonymouscard;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,9 +16,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import xyz.viseator.anonymouscard.data.ConvertData;
@@ -27,10 +37,13 @@ public class MainActivity extends AppCompatActivity
     private Button mbuttonSend, mButtonJoin, mButtonSendSingle;
     private EditText editText;
     private TextView textViewShowIP, textViewShowMac, textViewTitle;
+    private Button button;
     private ComUtil comUtil = null;
     private ArrayList<String> receivedIds;
     private SingleUtil singleUtil = null;
     private static String testIP = null;
+    public static Context context;
+    private ImageView imageView;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -39,14 +52,14 @@ public class MainActivity extends AppCompatActivity
                 case ComUtil.BROADCAST_PORT:
                     byte[] data = (byte[]) msg.obj;
                     UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.ByteToObject(data);
-                    if (!receivedIds.contains(udpDataPackage.getId())) {
+                    //if (!receivedIds.contains(udpDataPackage.getId())) {
                         Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
                         receivedIds.add(udpDataPackage.getId());
                         textViewTitle.setText(udpDataPackage.getTitle());
                         textViewShowMac.setText(udpDataPackage.getMacAddress());
                         textViewShowIP.setText(udpDataPackage.getIpAddress());
                         testIP = udpDataPackage.getIpAddress();
-                    }
+                    //}
                     break;
                 case SingleUtil.SINGLE_PORT:
                     Toast.makeText(MainActivity.this, "收到私有信息", Toast.LENGTH_SHORT).show();
@@ -59,6 +72,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context=getApplicationContext();
         receivedIds = new ArrayList<>();
         mbuttonSend = (Button) findViewById(R.id.send_msg);
         mbuttonSend.setOnClickListener(this);
@@ -66,6 +80,16 @@ public class MainActivity extends AppCompatActivity
         mButtonJoin.setOnClickListener(this);
         mButtonSendSingle = (Button) findViewById(R.id.send_single);
         mButtonSendSingle.setOnClickListener(this);
+        button = (Button) findViewById(R.id.select_img);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent,1);
+            }
+        });
         editText = (EditText) findViewById(R.id.edit_msg);
         textViewShowIP = (TextView) findViewById(R.id.show_ip);
         textViewShowMac = (TextView) findViewById(R.id.show_mac);
@@ -74,6 +98,7 @@ public class MainActivity extends AppCompatActivity
         comUtil = new ComUtil(handler);
         dataPackage = new DataPackage();
         singleUtil = new SingleUtil(handler);
+        imageView=(ImageView)findViewById(R.id.showImage);
     }
 
     @Override
@@ -86,8 +111,6 @@ public class MainActivity extends AppCompatActivity
                 dataPackage.setMacAddress(GetNetworkInfo.getMac());
                 dataPackage.setId(1);
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
-
-
                 byte[] data = ConvertData.ObjectToByte(udpDataPackage);
                 Log.d(TAG, String.valueOf(data));
                 for (int i = 0; i < 3; i++)
@@ -100,10 +123,22 @@ public class MainActivity extends AppCompatActivity
             case R.id.send_single:
                 String str1 = new String("hello world");
                 byte[] strb = str1.getBytes();
-                singleUtil.sendSingle(strb, testIP);
+                singleUtil.sendSingle1(testIP,"1",GetNetworkInfo.getIp(MainActivity.this));
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Uri uri = data.getData();
+        ContentResolver contentResolver = this.getContentResolver();
+        try {
+            Bitmap bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri));
+            imageView.setImageBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
+
+    }
 }
