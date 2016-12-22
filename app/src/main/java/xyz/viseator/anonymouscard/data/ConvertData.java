@@ -1,11 +1,13 @@
 package xyz.viseator.anonymouscard.data;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * Created by viseator on 2016/12/21.
@@ -14,7 +16,7 @@ import java.io.Serializable;
  */
 
 public class ConvertData {
-    public static byte[] ObjectToByte(Serializable object) {
+    public static byte[] objectToByte(Object object) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream outputStream;
         try {
@@ -26,7 +28,7 @@ public class ConvertData {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static Object ByteToObject(byte[] bytes) {
+    public static Object byteToObject(byte[] bytes) {
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
         Object object = null;
         try {
@@ -36,5 +38,16 @@ public class ConvertData {
             e.printStackTrace();
         }
         return object;
+    }
+
+    public static byte[] bitmapToByte(Bitmap bitmap) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
+        return byteStream.toByteArray();
+
+    }
+
+    public static Bitmap byteToBitmap(byte[] bytes) {
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 }

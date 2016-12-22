@@ -3,10 +3,8 @@ package xyz.viseator.anonymouscard;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,20 +51,20 @@ public class MainActivity extends AppCompatActivity
             switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
                     byte[] data = (byte[]) msg.obj;
-                    UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.ByteToObject(data);
+                    UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.byteToObject(data);
                     //if (!receivedIds.contains(udpDataPackage.getId())) {
-                        Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
-                        receivedIds.add(udpDataPackage.getId());
-                        textViewTitle.setText(udpDataPackage.getTitle());
-                        textViewShowMac.setText(udpDataPackage.getMacAddress());
-                        textViewShowIP.setText(udpDataPackage.getIpAddress());
-                        testIP = udpDataPackage.getIpAddress();
+                    Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
+                    receivedIds.add(udpDataPackage.getId());
+                    textViewTitle.setText(udpDataPackage.getTitle());
+                    textViewShowMac.setText(udpDataPackage.getMacAddress());
+                    textViewShowIP.setText(udpDataPackage.getIpAddress());
+                    testIP = udpDataPackage.getIpAddress();
                     //}
                     break;
                 case SingleUtil.SINGLE_PORT:
-                    DataPackageInSingle data1=(DataPackageInSingle)msg.obj;
-                    imageView.setImageBitmap(data1.getBitmap());
-                    Toast.makeText(MainActivity.this,"soudao",Toast.LENGTH_SHORT).show();
+                    DataPackageInSingle data1 = (DataPackageInSingle) msg.obj;
+                    imageView.setImageBitmap(ConvertData.byteToBitmap(data1.getBitmap()));
+                    Toast.makeText(MainActivity.this, data1.getContent(), Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        context=getApplicationContext();
+        context = getApplicationContext();
         receivedIds = new ArrayList<>();
         mbuttonSend = (Button) findViewById(R.id.send_msg);
         mbuttonSend.setOnClickListener(this);
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
             }
         });
         editText = (EditText) findViewById(R.id.edit_msg);
@@ -102,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         comUtil = new ComUtil(handler);
         dataPackage = new DataPackage();
         singleUtil = new SingleUtil(handler);
-        imageView=(ImageView)findViewById(R.id.showImage);
+        imageView = (ImageView) findViewById(R.id.showImage);
     }
 
     @Override
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity
                 dataPackage.setMacAddress(GetNetworkInfo.getMac());
                 dataPackage.setId(1);
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
-                byte[] data = ConvertData.ObjectToByte(udpDataPackage);
+                byte[] data = ConvertData.objectToByte(udpDataPackage);
                 Log.d(TAG, String.valueOf(data));
                 for (int i = 0; i < 3; i++)
                     comUtil.broadCast(data);
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity
                 singleUtil.startRecieveMsg();
                 break;
             case R.id.send_single:
-                singleUtil.sendSingle1(testIP,"1",GetNetworkInfo.getIp(MainActivity.this));
+                singleUtil.sendSingle1(testIP, "1", GetNetworkInfo.getIp(MainActivity.this));
                 break;
         }
     }
@@ -133,7 +131,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Uri uri = data.getData();
-        Log.d(TAG, "onActivityResult: "+uri.toString());
+        Log.d(TAG, "onActivityResult: " + uri.toString());
         ContentResolver contentResolver = this.getContentResolver();
         try {
             bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri));

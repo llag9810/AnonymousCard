@@ -1,9 +1,6 @@
 package xyz.viseator.anonymouscard.data;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by viseator on 2016/12/21.
@@ -18,7 +15,7 @@ public class DataPackage implements Serializable {
     private String title;
     private String content;
     private String id;
-    private ArrayList<Bitmap> contentPics;
+    private byte[] contentPic;
 
 
     public String getId() {
@@ -61,11 +58,11 @@ public class DataPackage implements Serializable {
         this.content = content;
     }
 
-    public ArrayList<Bitmap> getContentPics() {
-        return contentPics;
+    public byte[] getContentPic() {
+        return contentPic;
     }
 
-    public void setContentPics(ArrayList<Bitmap> contentPics) {
-        this.contentPics = contentPics;
+    public void setContentPic(byte[] contentPic) {
+        this.contentPic = contentPic;
     }
 }

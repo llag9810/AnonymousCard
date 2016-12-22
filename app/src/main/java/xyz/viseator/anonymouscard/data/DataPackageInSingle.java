@@ -1,7 +1,5 @@
 package xyz.viseator.anonymouscard.data;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 
 /**
@@ -13,7 +11,7 @@ public class DataPackageInSingle implements Serializable{
     private int sign;
     private String myIp;
     private String Id;
-    private Bitmap bitmap;
+    private byte[] bitmap;
     private String content;
 
     public long getSerialVersionUID() {
@@ -44,12 +42,12 @@ public class DataPackageInSingle implements Serializable{
         Id = id;
     }
 
-    public Bitmap getBitmap() {
+    public byte[] getBitmap() {
         return bitmap;
     }
 
 
-    public void setBitmap(Bitmap bitmap) {
+    public void setBitmap(byte[] bitmap) {
         this.bitmap = bitmap;
     }
 
