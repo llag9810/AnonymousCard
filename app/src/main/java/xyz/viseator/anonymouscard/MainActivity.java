@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case SingleUtil.SINGLE_PORT:
                     DataPackageInSingle data1=(DataPackageInSingle) ConvertData.ByteToObject((byte[]) msg.obj);
-                    //imageView.setImageBitmap(data1.getBitmap());
+                    imageView.setImageBitmap(data1.getBitmap());
                     Toast.makeText(MainActivity.this,"soudao",Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -133,9 +133,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Uri uri = data.getData();
+        Log.d(TAG, "onActivityResult: "+uri.toString());
         ContentResolver contentResolver = this.getContentResolver();
         try {
             bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri));
+            imageView.setImageBitmap(bitmap);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
