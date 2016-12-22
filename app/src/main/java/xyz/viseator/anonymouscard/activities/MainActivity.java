@@ -1,14 +1,18 @@
-package xyz.viseator.anonymouscard;
+package xyz.viseator.anonymouscard.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import xyz.viseator.anonymouscard.R;
+import xyz.viseator.anonymouscard.ui.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.view_pager)
@@ -39,5 +43,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setCustomView(view1);
         tabLayout.getTabAt(1).setCustomView(view2);
         tabLayout.getTabAt(2).setCustomView(view3);
+    }
+
+    @OnClick(R.id.float_button)
+    public void clickFloatButton() {
+        Intent intent = new Intent(this,SendNewCardActivity.class);
+        startActivity(intent);
     }
 }

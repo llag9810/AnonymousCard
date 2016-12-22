@@ -1,4 +1,4 @@
-package xyz.viseator.anonymouscard;
+package xyz.viseator.anonymouscard.ui;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

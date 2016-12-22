@@ -1,10 +1,12 @@
-package xyz.viseator.anonymouscard;
+package xyz.viseator.anonymouscard.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import xyz.viseator.anonymouscard.R;
 
 /**
  * Created by viseator on 2016/12/20.

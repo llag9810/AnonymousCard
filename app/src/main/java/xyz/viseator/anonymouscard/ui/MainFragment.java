@@ -1,4 +1,4 @@
-package xyz.viseator.anonymouscard;
+package xyz.viseator.anonymouscard.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import xyz.viseator.anonymouscard.R;
 
 /**
  * Created by viseator on 2016/12/20.
