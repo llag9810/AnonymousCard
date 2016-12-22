@@ -48,6 +48,7 @@ public class DataPackageInSingle implements Serializable{
         return bitmap;
     }
 
+
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }

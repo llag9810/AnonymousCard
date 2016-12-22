@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
                     //}
                     break;
                 case SingleUtil.SINGLE_PORT:
-                    DataPackageInSingle data1=(DataPackageInSingle) ConvertData.ByteToObject((byte[]) msg.obj);
+                    DataPackageInSingle data1=(DataPackageInSingle)msg.obj;
                     imageView.setImageBitmap(data1.getBitmap());
                     Toast.makeText(MainActivity.this,"soudao",Toast.LENGTH_SHORT).show();
                     break;
