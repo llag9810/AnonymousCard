@@ -27,35 +27,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/send_appbar"
+        android:background="@color/mainBackground"
         >
 
         <EditText
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="5dp"
             android:id="@+id/send_title"
-            android:hint="title"
+            android:hint="标题"
+            android:paddingStart="170dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_title"
             android:layout_width="match_parent"
             android:layout_height="80dp"
 
             />
 
         <EditText
-            android:hint="content"
+            android:background="@drawable/content"
+            android:hint="内容"
+            android:padding="10dp"
+            android:gravity="start"
+            android:layout_marginStart="6dp"
             android:layout_below="@id/send_title"
             android:id="@+id/send_content"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             />
 
         <LinearLayout
+            android:layout_marginTop="460dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
             android:orientation="horizontal"
-            android:layout_below="@+id/send_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
-                android:src="@drawable/ic_action_add"
+                android:src="@drawable/image_button"
                 android:id="@+id/send_image"
-                android:layout_width="match_parent"
+                android:layout_width="40dp"
                 android:layout_height="match_parent"
+                android:padding="3dp"
                 android:clickable="true"
                 />
 

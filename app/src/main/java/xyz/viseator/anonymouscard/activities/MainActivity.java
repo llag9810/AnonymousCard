@@ -2,9 +2,11 @@ package xyz.viseator.anonymouscard.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -14,11 +16,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.viseator.anonymouscard.R;
+import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
+import xyz.viseator.anonymouscard.data.UDPDataPackage;
+import xyz.viseator.anonymouscard.network.ComUtil;
 import xyz.viseator.anonymouscard.ui.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private static final int SEND_CARD = 1;
+    private static final String TAG = "wudi MainActivity";
     private int cardId = 0;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
@@ -64,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SEND_CARD) {
             if (resultCode == RESULT_OK) {
-
+                DataPackage dataPackage = (DataPackage) data.getSerializableExtra("data");
+                if(dataPackage!= null){
+                    Log.d(TAG, "onActivityResult: Got Data");
+                    ComUtil comUtil = new ComUtil(new Handler()); // use comUtil
+                    comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
+                    dataPackages.add(dataPackage);
+                    cardId++;
+                }
             }
         }
     }

@@ -48,7 +48,11 @@ public class SendNewCardActivity extends AppCompatActivity {
         dataPackage.setContent(cardContent.getText().toString());
         dataPackage.setTitle(cardTitle.getText().toString());
         dataPackage.setId(getIntent().getIntExtra("cardId", -1));
-        // TODO: 2016/12/22 there
+
+        Intent intent = new Intent();
+        intent.putExtra("data", dataPackage);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @OnClick(R.id.send_image)
