@@ -14,8 +14,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import xyz.viseator.anonymouscard.MainActivity;
-import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackageInSingle;
 
 /**
@@ -53,7 +51,7 @@ public class SingleUtil {
                     DataPackageInSingle data = new DataPackageInSingle();  //将来被替换
                     data.setContent("Hello World");
                     data.setSign(0);                                     //将来被替换
-                    data.setBitmap(ConvertData.bitmapToByte(MainActivity.bitmap));
+                    data.setBitmap(null);
                     os = socket.getOutputStream();
                     objectos = new ObjectOutputStream(os);
                     objectos.writeObject(data);
