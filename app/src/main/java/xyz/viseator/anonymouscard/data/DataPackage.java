@@ -6,12 +6,12 @@ import java.io.Serializable;
  * Created by yanhao on 16-12-22.
  */
 
-public class DataPackage implements Serializable{
+public class DataPackage implements Serializable {
     final long serialVersionUID = 66666666L;
     private int sign;
     private String myMac;
     private String myIp;
-    private String Id;
+    private String id;
     private byte[] bitmap;
     private String content;
     private String title;
@@ -53,11 +53,11 @@ public class DataPackage implements Serializable{
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
-    public void setId(String id) {
-        Id = id;
+    public void setId(int id) {
+        this.id = myMac + "__" + String.valueOf(id);
     }
 
     public byte[] getBitmap() {

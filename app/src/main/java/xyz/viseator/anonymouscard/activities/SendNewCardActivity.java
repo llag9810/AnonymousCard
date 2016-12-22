@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 
@@ -17,14 +17,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.viseator.anonymouscard.R;
+import xyz.viseator.anonymouscard.data.DataPackage;
+import xyz.viseator.anonymouscard.network.GetNetworkInfo;
 
 public class SendNewCardActivity extends AppCompatActivity {
 
     private static final int GET_IMAGE = 1;
     private static final String TAG = "wudi SendNewCard";
+    Bitmap bitmap;
     @BindView(R.id.send_image)
     ImageView imageView;
-
+    @BindView(R.id.send_title)
+    EditText cardTitle;
+    @BindView(R.id.send_content)
+    EditText cardContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +38,17 @@ public class SendNewCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_send_new_card);
         ButterKnife.bind(this);
 
-
     }
 
     @OnClick(R.id.send_float_button)
     public void sendCard() {
-        Toast.makeText(this, "Send!", Toast.LENGTH_SHORT).show();
+        DataPackage dataPackage = new DataPackage();
+        dataPackage.setMyIp(GetNetworkInfo.getIp(this));
+        dataPackage.setMyMac(GetNetworkInfo.getMac());
+        dataPackage.setContent(cardContent.getText().toString());
+        dataPackage.setTitle(cardTitle.getText().toString());
+        dataPackage.setId(getIntent().getIntExtra("cardId", -1));
+        // TODO: 2016/12/22 there
     }
 
     @OnClick(R.id.send_image)
@@ -55,7 +66,7 @@ public class SendNewCardActivity extends AppCompatActivity {
             Log.d(TAG, "onActivityResult: " + uri.toString());
             ContentResolver cr = this.getContentResolver();
             try {
-                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                 imageView.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "onActivityResult: error");
