@@ -36,7 +36,6 @@ public class ComUtil {
             public void run() {
                 try
                 {
-                    //byte[] buff = msg.getBytes(CHARSET);
                     outPacket.setData(msg);
                     socket.send(outPacket);
                 }
@@ -62,7 +61,6 @@ public class ComUtil {
             while(true){
                 try {
                     socket.receive(inPacket);
-                    //String msg=new String(inBuff,0,inPacket.getLength(),CHARSET);
                     Message message=new Message();
                     message.what=BROADCAST_PORT;
                     message.obj=inBuff;
@@ -79,7 +77,7 @@ public class ComUtil {
             socket=new MulticastSocket(BROADCAST_PORT);
             broadcastAddress=InetAddress.getByName(BROADCAST_IP);
             socket.joinGroup(broadcastAddress);
-            socket.setLoopbackMode(false);
+            //socket.setLoopbackMode(false);
             outPacket=new DatagramPacket(new byte[0],0,broadcastAddress,BROADCAST_PORT);
         } catch (IOException e) {
             e.printStackTrace();

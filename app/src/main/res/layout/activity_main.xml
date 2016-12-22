@@ -17,7 +17,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/join_group"/>
+            android:id="@+id/join_group"
+            android:text="加入组播"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/send_single"
+            android:text="私发"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +39,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/send_msg"/>
+            android:id="@+id/send_msg"
+            android:text="群发"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

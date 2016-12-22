@@ -23,16 +23,19 @@ import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.network.ComUtil;
 import xyz.viseator.anonymouscard.network.GetNetworkInfo;
+import xyz.viseator.anonymouscard.network.SingleUtil;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener {
     private static final String TAG = "wudi MainActivity";
     private DataPackage dataPackage;
-    private Button mbuttonSend, mButtonJoin;
+    private Button mbuttonSend, mButtonJoin,mButtonSendSingle;
     private EditText editText;
     private TextView textViewShowIP, textViewShowMac, textViewTitle;
     private ComUtil comUtil = null;
     private ArrayList<String> receivedIds;
+    private SingleUtil singleUtil=null;
+    private static String testIP=null;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -41,14 +44,17 @@ public class MainActivity extends AppCompatActivity
                 case ComUtil.BROADCAST_PORT:
                     byte[] data = (byte[]) msg.obj;
                     Toast.makeText(MainActivity.this, "Received", Toast.LENGTH_SHORT).show();
-
                     UDPDataPackage udpDataPackage = ConvertData.ByteToDataPackage(data);
                     if (!receivedIds.contains(udpDataPackage.getId())) {
                         receivedIds.add(udpDataPackage.getId());
                         textViewTitle.setText(udpDataPackage.getTitle());
                         textViewShowMac.setText(udpDataPackage.getMacAddress());
                         textViewShowIP.setText(udpDataPackage.getIpAddress());
+                        testIP=udpDataPackage.getIpAddress();
                     }
+                    break;
+                case SingleUtil.SINGLE_PORT:
+                    Toast.makeText(MainActivity.this,"收到私有信息",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -63,6 +69,8 @@ public class MainActivity extends AppCompatActivity
         mbuttonSend.setOnClickListener(this);
         mButtonJoin = (Button) findViewById(R.id.join_group);
         mButtonJoin.setOnClickListener(this);
+        mButtonSendSingle=(Button)findViewById(R.id.send_single);
+        mButtonSendSingle.setOnClickListener(this);
         editText = (EditText) findViewById(R.id.edit_msg);
         textViewShowIP = (TextView) findViewById(R.id.show_ip);
         textViewShowMac = (TextView) findViewById(R.id.show_mac);
@@ -70,7 +78,7 @@ public class MainActivity extends AppCompatActivity
         textViewTitle = (TextView) findViewById(R.id.show_title);
         comUtil = new ComUtil(handler);
         dataPackage = new DataPackage();
-
+        singleUtil=new SingleUtil(handler);
     }
 
     @Override
@@ -83,8 +91,6 @@ public class MainActivity extends AppCompatActivity
                 dataPackage.setMacAddress(GetNetworkInfo.getMac());
                 dataPackage.setId(1);
                 UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
-
-
                 byte[] data = ConvertData.DataPackageToByte(udpDataPackage);
                 Log.d(TAG, String.valueOf(data));
                 for (int i = 0; i < 3; i++)
@@ -92,6 +98,12 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.join_group:
                 comUtil.startRecieveMsg();
+                singleUtil.startRecieveMsg();
+                break;
+            case R.id.send_single:
+                String str1=new String("hello world");
+                byte[] strb=str1.getBytes();
+                singleUtil.sendSingle(strb,testIP);
                 break;
         }
     }
