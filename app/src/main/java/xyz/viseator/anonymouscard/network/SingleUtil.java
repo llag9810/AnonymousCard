@@ -14,7 +14,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import xyz.viseator.anonymouscard.data.DataPackageInSingle;
+import xyz.viseator.anonymouscard.data.DataPackage;
 
 /**
  * Created by yanhao on 16-12-21.
@@ -48,7 +48,7 @@ public class SingleUtil {
                 ObjectOutputStream objectos = null;
                 try {
                     socket = new Socket(ipAddress, SINGLE_PORT);
-                    DataPackageInSingle data = new DataPackageInSingle();  //将来被替换
+                    DataPackage data = new DataPackage();  //将来被替换
                     data.setContent("Hello World");
                     data.setSign(0);                                     //将来被替换
                     data.setBitmap(null);
@@ -84,7 +84,7 @@ public class SingleUtil {
                 ObjectOutputStream objectos = null;
                 try {
                     socket = new Socket(ipAddress, SINGLE_PORT);
-                    DataPackageInSingle data = new DataPackageInSingle();
+                    DataPackage data = new DataPackage();
                     data.setSign(1);
                     data.setId(cardId);
                     data.setMyIp(myIP);
@@ -130,7 +130,7 @@ public class SingleUtil {
                         socket = serverSocket.accept();
                         in = socket.getInputStream();
                         objinput = new ObjectInputStream(in);
-                        DataPackageInSingle data1 = (DataPackageInSingle) objinput.readObject();
+                        DataPackage data1 = (DataPackage) objinput.readObject();
                         int sign = data1.getSign();
                         if (sign == 1) {
                             Log.d("信息:", "收到请求大包");

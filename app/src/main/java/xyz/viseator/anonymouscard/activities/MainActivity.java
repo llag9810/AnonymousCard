@@ -8,10 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.viseator.anonymouscard.R;
+import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.ui.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,13 +23,15 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
-
+    private ArrayList<DataPackage> dataPackages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(MainActivity.this);
+
+        dataPackages = new ArrayList<>();
 
         initViews();
     }
@@ -49,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.float_button)
     public void clickFloatButton() {
-        Intent intent = new Intent(this,SendNewCardActivity.class);
-        startActivityForResult(intent,SEND_CARD);
+        Intent intent = new Intent(this, SendNewCardActivity.class);
+        startActivityForResult(intent, SEND_CARD);
     }
 
     @Override

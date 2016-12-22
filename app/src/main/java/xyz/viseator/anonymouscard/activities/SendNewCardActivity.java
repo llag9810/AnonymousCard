@@ -24,6 +24,8 @@ public class SendNewCardActivity extends AppCompatActivity {
     private static final String TAG = "wudi SendNewCard";
     @BindView(R.id.send_image)
     ImageView imageView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

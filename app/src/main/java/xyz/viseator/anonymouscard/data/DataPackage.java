@@ -3,43 +3,25 @@ package xyz.viseator.anonymouscard.data;
 import java.io.Serializable;
 
 /**
- * Created by viseator on 2016/12/21.
- * Wudi
- * viseator@gmail.com
+ * Created by yanhao on 16-12-22.
  */
 
-public class DataPackage implements Serializable {
+public class DataPackage implements Serializable{
     final long serialVersionUID = 66666666L;
-    private String ipAddress;
-    private String macAddress;
-    private String title;
+    private int sign;
+    private String myMac;
+    private String myIp;
+    private String Id;
+    private byte[] bitmap;
     private String content;
-    private String id;
-    private byte[] contentPic;
+    private String title;
 
-
-    public String getId() {
-        return id;
+    public String getMyMac() {
+        return myMac;
     }
 
-    public void setId(int id) {
-        this.id = macAddress + "_" + String.valueOf(id);
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getMacAddress() {
-        return macAddress;
-    }
-
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
+    public void setMyMac(String myMac) {
+        this.myMac = myMac;
     }
 
     public String getTitle() {
@@ -50,19 +32,48 @@ public class DataPackage implements Serializable {
         this.title = title;
     }
 
+    public long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public int getSign() {
+        return sign;
+    }
+
+    public void setSign(int sign) {
+        this.sign = sign;
+    }
+
+    public String getMyIp() {
+        return myIp;
+    }
+
+    public void setMyIp(String myIp) {
+        this.myIp = myIp;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+    public byte[] getBitmap() {
+        return bitmap;
+    }
+
+
+    public void setBitmap(byte[] bitmap) {
+        this.bitmap = bitmap;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public byte[] getContentPic() {
-        return contentPic;
-    }
-
-    public void setContentPic(byte[] contentPic) {
-        this.contentPic = contentPic;
     }
 }
