@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,7 @@ import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.adapter.ViewPagerAdapter;
 import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
+import xyz.viseator.anonymouscard.data.DataStore;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.network.ComUtil;
 import xyz.viseator.anonymouscard.network.SingleUtil;
@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity {
     private ArrayList<UDPDataPackage> udpDataPackages;
     private ComUtil comUtil;
     private SingleUtil singleUtil;
+    private DataStore dataStore;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -52,11 +53,12 @@ public class MainActivity extends FragmentActivity {
                 case ComUtil.BROADCAST_PORT:
                     UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.byteToObject((byte[]) msg.obj);
                     udpDataPackages.add(udpDataPackage);
+                    dataStore.setDataPackages(dataPackages);
                     mainFragment.recyclerView.getAdapter().notifyDataSetChanged();
                     Log.d(TAG, "handleMessage: Receive UDP");
                     break;
                 case SingleUtil.SINGLE_PORT:
-                    Toast.makeText(MainActivity.this,"收到打包",Toast.LENGTH_SHORT).show();
+
                     break;
             }
         }
@@ -69,6 +71,7 @@ public class MainActivity extends FragmentActivity {
         ButterKnife.bind(MainActivity.this);
         dataPackages = new ArrayList<>();
         udpDataPackages = new ArrayList<>();
+        dataStore = new DataStore();
         init();
         initViews();
     }
@@ -119,6 +122,7 @@ public class MainActivity extends FragmentActivity {
                     comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
                     dataPackages.add(dataPackage);
                     udpDataPackages.add(new UDPDataPackage(dataPackage));
+                    dataStore.setDataPackages(dataPackages);
                     cardId++;
                 }
             }
@@ -137,6 +141,7 @@ public class MainActivity extends FragmentActivity {
         return null;
     }
 
+
     public ArrayList<UDPDataPackage> getUdpDataPackages() {
         return udpDataPackages;
     }
@@ -144,7 +149,7 @@ public class MainActivity extends FragmentActivity {
     private void init() {
         comUtil = new ComUtil(handler);
         comUtil.startRecieveMsg();
-        singleUtil=new SingleUtil(handler);
+        singleUtil=new SingleUtil(handler,dataStore);
         singleUtil.startRecieveMsg();
     }
 

@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import xyz.viseator.anonymouscard.data.DataPackage;
+import xyz.viseator.anonymouscard.data.DataStore;
 
 /**
  * Created by yanhao on 16-12-21.
@@ -22,15 +23,17 @@ import xyz.viseator.anonymouscard.data.DataPackage;
 public class SingleUtil {
     private DatagramSocket singleSocket = null;
     private Handler handler = null;
+    private DataStore dataStore;
     public static final int SINGLE_PORT = 7817;
     private static final int DATA_LEN = 4096;
 
-    public SingleUtil(Handler handler) {
+    public SingleUtil(Handler handler, DataStore dataStore) {
         try {
             singleSocket = new DatagramSocket(SINGLE_PORT);
         } catch (SocketException e) {
             e.printStackTrace();
         }
+        this.dataStore = dataStore;
         this.handler = handler;
     }
 
