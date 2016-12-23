@@ -64,11 +64,11 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_fregment, container, false);
         ButterKnife.bind(this, view);
-        udpDataPackages = ((MainActivity) getActivity()).getUdpDataPackages();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.hasFixedSize();
         MainRecyclerViewAdapter mainRecyclerViewAdapter;
         if (fragmentId == 1) {
+            udpDataPackages = ((MainActivity) getActivity()).getUdpDataPackages();
             mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
         } else {
             udpDataPackages = new ArrayList<>();
@@ -87,6 +87,13 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
     @Override
     public void onResume() {
         super.onResume();
+        if(fragmentId==2){
+            udpDataPackages = new ArrayList<>();
+            for (DataPackage dataPackage : MainActivity.dataPackages) {
+                UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
+                udpDataPackages.add(udpDataPackage);
+            }
+        }
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
