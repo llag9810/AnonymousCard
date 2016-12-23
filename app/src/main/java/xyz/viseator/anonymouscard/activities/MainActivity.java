@@ -51,8 +51,8 @@ public class MainActivity extends FragmentActivity {
     @BindView(R.id.main_toolbar_text)
     TextView toolbarTitle;
 
-    private ArrayList<DataPackage> dataPackages;
-    private ArrayList<UDPDataPackage> udpDataPackages;
+    public static ArrayList<DataPackage> dataPackages;
+    private static ArrayList<UDPDataPackage> udpDataPackages;
 
     private ComUtil comUtil;
     private TcpServer tcpServer;

@@ -107,7 +107,7 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
     public void sendRequest(){
         Intent intent = new Intent(getContext(), CardDetailActivity.class);
         intent.putExtra("data", ((MainActivity) getActivity()).getDataById(mId));
-        intent.putExtra("allDataPackages", ((MainActivity) getActivity()).getDataPackages());
+//        intent.putExtra("allDataPackages", ((MainActivity) getActivity()).getDataPackages());
         startActivityForResult(intent, 11);
     }
 
