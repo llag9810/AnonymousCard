@@ -20,7 +20,7 @@ import xyz.viseator.anonymouscard.data.UDPDataPackage;
  */
 
 public class TcpClient {
-    private static int SERVER_PORT = 7889;
+    public static int SERVER_PORT = 7889;
     private Thread thread;
     private String ipAddress;
     private UDPDataPackage udpDataPackage;
@@ -58,5 +58,6 @@ public class TcpClient {
         this.udpDataPackage = udpDataPackage;
         this.handler = handler;
         thread = new Thread(new SendData());
+        thread.start();
     }
 }

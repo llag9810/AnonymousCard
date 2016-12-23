@@ -27,7 +27,7 @@ import xyz.viseator.anonymouscard.data.DataStore;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.data.UserInfo;
 import xyz.viseator.anonymouscard.network.ComUtil;
-import xyz.viseator.anonymouscard.network.SingleUtil;
+import xyz.viseator.anonymouscard.network.TcpServer;
 import xyz.viseator.anonymouscard.ui.MainFragment;
 
 public class MainActivity extends FragmentActivity {
@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity {
     private ArrayList<UDPDataPackage> udpDataPackages;
 
     private ComUtil comUtil;
-    private SingleUtil singleUtil;
+    private TcpServer tcpServer;
     private DataStore dataStore;
     private Handler handler = new Handler() {
         @Override
@@ -64,6 +64,7 @@ public class MainActivity extends FragmentActivity {
                         Log.d(TAG, "handleMessage: Receive UDP");
                     }
                     break;
+
             }
         }
     };
@@ -154,10 +155,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void init() {
+        tcpServer = new TcpServer(dataStore);
+        tcpServer.startServer();
         comUtil = new ComUtil(handler);
         comUtil.startRecieveMsg();
-        singleUtil = new SingleUtil(handler, dataStore, userInfo);
-        singleUtil.startRecieveMsg();
+
     }
 
     public UserInfo getUserInfo() {

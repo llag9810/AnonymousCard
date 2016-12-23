@@ -20,7 +20,7 @@ import xyz.viseator.anonymouscard.data.UDPDataPackage;
  */
 
 public class TcpServer {
-    private static int SERVER_PORT = 7889;
+    public static final int SERVER_PORT = 7889;
     private DataStore dataStore;
     private Thread thread;
 

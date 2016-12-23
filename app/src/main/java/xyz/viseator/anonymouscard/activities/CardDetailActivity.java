@@ -18,12 +18,11 @@ import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
-import xyz.viseator.anonymouscard.network.GetNetworkInfo;
-import xyz.viseator.anonymouscard.network.SingleUtil;
+import xyz.viseator.anonymouscard.network.TcpClient;
 
 public class CardDetailActivity extends AppCompatActivity {
     private static final String TAG = "wudi CardDetail";
-    private SingleUtil singleUtil;
+    private TcpClient tcpClient;
     private DataPackage dataPackage;
     private UDPDataPackage receivedDataPackage;
     private ArrayList<DataPackage> dataPackages;
@@ -37,7 +36,7 @@ public class CardDetailActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == SingleUtil.SINGLE_PORT) {
+            if (msg.what == TcpClient.SERVER_PORT) {
                 Log.d(TAG, "handleMessage: Receive Data");
                 dataPackage = (DataPackage) msg.obj;
                 content.setText(dataPackage.getContent());
@@ -69,17 +68,10 @@ public class CardDetailActivity extends AppCompatActivity {
             }
         }
         if (!contains) {
-            init();
-            SingleUtil singleUtil1 = new SingleUtil();
-            singleUtil1.sendSingle1(receivedDataPackage.getIpAddress(),
-                    receivedDataPackage.getId(), GetNetworkInfo.getIp(this));
+            tcpClient = new TcpClient();
+            tcpClient.sendRequest(receivedDataPackage.getIpAddress(), receivedDataPackage, handler);
         }
     }
 
-
-    private void init() {
-        singleUtil = new SingleUtil(handler);
-        singleUtil.startRecieveMsgForBack();
-    }
 
 }
