@@ -16,8 +16,8 @@ public class UDPDataPackage implements Serializable {
     private String id;
 
     public UDPDataPackage(DataPackage dataPackage) {
-        ipAddress = dataPackage.getMyIp();
-        macAddress = dataPackage.getMyMac();
+        ipAddress = dataPackage.getIp();
+        macAddress = dataPackage.getMac();
         title = dataPackage.getTitle();
         id = dataPackage.getId();
     }

@@ -2,8 +2,6 @@ package xyz.viseator.anonymouscard.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +18,6 @@ import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.activities.CardDetailActivity;
 import xyz.viseator.anonymouscard.activities.MainActivity;
 import xyz.viseator.anonymouscard.adapter.MainRecyclerViewAdapter;
-import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.network.ComUtil;
 
@@ -30,7 +27,7 @@ import xyz.viseator.anonymouscard.network.ComUtil;
  * viseator@gmail.com
  */
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment  {
     @BindView(R.id.main_recyclerView)
     public RecyclerView recyclerView;
     String name;

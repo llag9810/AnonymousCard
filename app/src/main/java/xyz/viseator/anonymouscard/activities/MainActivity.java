@@ -127,9 +127,12 @@ public class MainActivity extends FragmentActivity {
 
 
 
-    public DataPackage getDataById(String id) {
-        for (DataPackage dataPackage : dataPackages) {
-            if (Objects.equals(dataPackage.getId(), id)) return dataPackage;
+    public UDPDataPackage getDataById(String id) {
+        for (UDPDataPackage udpDataPackage : udpDataPackages) {
+            if (Objects.equals(udpDataPackage.getId(), id)) {
+                Log.d(TAG, "getDataById: found data");
+                return udpDataPackage;
+            }
         }
         return null;
     }
@@ -144,4 +147,6 @@ public class MainActivity extends FragmentActivity {
         singleUtil=new SingleUtil(handler);
         singleUtil.startRecieveMsg();
     }
+
+
 }

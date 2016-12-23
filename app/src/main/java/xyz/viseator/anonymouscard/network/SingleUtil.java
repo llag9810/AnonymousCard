@@ -26,15 +26,23 @@ public class SingleUtil {
     private static final int DATA_LEN = 4096;
 
     public SingleUtil(Handler handler) {
-        this.handler = handler;
-    }
-
-    public void startRecieveMsg() {
         try {
             singleSocket = new DatagramSocket(SINGLE_PORT);
         } catch (SocketException e) {
             e.printStackTrace();
         }
+        this.handler = handler;
+    }
+
+    public SingleUtil() {
+        try {
+            singleSocket = new DatagramSocket(SINGLE_PORT);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startRecieveMsg() {
         Thread thread = new Thread(new ReadSingle());
         thread.start();
     }
@@ -87,7 +95,7 @@ public class SingleUtil {
                     DataPackage data = new DataPackage();
                     data.setSign(1);
                     data.setId(cardId);
-                    data.setMyIp(myIP);
+                    data.setIp(myIP);
                     os = socket.getOutputStream();
                     objectos = new ObjectOutputStream(os);
                     objectos.writeObject(data);
@@ -134,7 +142,7 @@ public class SingleUtil {
                         int sign = data1.getSign();
                         if (sign == 1) {
                             Log.d("信息:", "收到请求大包");
-                            sendConcreteData(data1.getId(), data1.getMyIp());
+                            sendConcreteData(data1.getId(), data1.getIp());
                         } else {
                             Message msg = new Message();
                             msg.what = SINGLE_PORT;

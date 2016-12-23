@@ -43,8 +43,8 @@ public class SendNewCardActivity extends AppCompatActivity {
     @OnClick(R.id.send_float_button)
     public void sendCard() {
         DataPackage dataPackage = new DataPackage();
-        dataPackage.setMyIp(GetNetworkInfo.getIp(this));
-        dataPackage.setMyMac(GetNetworkInfo.getMac());
+        dataPackage.setIp(GetNetworkInfo.getIp(this));
+        dataPackage.setMac(GetNetworkInfo.getMac());
         dataPackage.setContent(cardContent.getText().toString());
         dataPackage.setTitle(cardTitle.getText().toString());
         dataPackage.setId(getIntent().getIntExtra("cardId", -1));

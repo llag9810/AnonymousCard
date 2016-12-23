@@ -9,19 +9,19 @@ import java.io.Serializable;
 public class DataPackage implements Serializable {
     final long serialVersionUID = 66666666L;
     private int sign;
-    private String myMac;
-    private String myIp;
+    private String mac;
+    private String ip;
     private String id;
     private byte[] bitmap;
     private String content;
     private String title;
 
-    public String getMyMac() {
-        return myMac;
+    public String getMac() {
+        return mac;
     }
 
-    public void setMyMac(String myMac) {
-        this.myMac = myMac;
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 
     public String getTitle() {
@@ -44,12 +44,12 @@ public class DataPackage implements Serializable {
         this.sign = sign;
     }
 
-    public String getMyIp() {
-        return myIp;
+    public String getIp() {
+        return ip;
     }
 
-    public void setMyIp(String myIp) {
-        this.myIp = myIp;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getId() {
@@ -57,7 +57,7 @@ public class DataPackage implements Serializable {
     }
 
     public void setId(int id) {
-        this.id = myMac + "_" + String.valueOf(id);
+        this.id = mac + "_" + String.valueOf(id);
     }
 
     public void setId(String id) {
