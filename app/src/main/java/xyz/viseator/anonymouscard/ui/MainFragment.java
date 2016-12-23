@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.viseator.anonymouscard.R;
+import xyz.viseator.anonymouscard.adapter.MainRecyclerViewAdapter;
 
 /**
  * Created by viseator on 2016/12/20.
