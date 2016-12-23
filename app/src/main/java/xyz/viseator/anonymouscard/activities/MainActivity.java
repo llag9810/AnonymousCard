@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SEND_CARD) {
             if (resultCode == RESULT_OK) {
                 DataPackage dataPackage = (DataPackage) data.getSerializableExtra("data");
-                if(dataPackage!= null){
+                if (dataPackage != null) {
                     Log.d(TAG, "onActivityResult: Got Data");
                     ComUtil comUtil = new ComUtil(new Handler()); // use comUtil
                     comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
@@ -80,5 +81,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public DataPackage getDataById(String id) {
+        for (DataPackage dataPackage : dataPackages) {
+            if (Objects.equals(dataPackage.getId(), id)) return dataPackage;
+        }
+        return null;
     }
 }
