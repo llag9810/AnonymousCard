@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.ui.MainFragment;
@@ -19,31 +20,17 @@ import xyz.viseator.anonymouscard.ui.MainFragment;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private ArrayList<DataPackage> dataPackages;
+    private List<Fragment> fragments;
 
-    public ViewPagerAdapter(FragmentManager fm, Context context, ArrayList<DataPackage> dataPackages) {
+    public ViewPagerAdapter(FragmentManager fm, Context context, List<Fragment> fragments) {
         super(fm);
         this.context = context;
-        this.dataPackages = dataPackages;
+        this.fragments=fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                MainFragment mainFragment = new MainFragment();
-                mainFragment.setName("主页");
-                return mainFragment;
-            case 1:
-                MainFragment mainFragment1 = new MainFragment();
-                mainFragment1.setName("次页");
-                return mainFragment1;
-            case 2:
-                MainFragment mainFragment2 = new MainFragment();
-                mainFragment2.setName("三页");
-                return mainFragment2;
-        }
-        return null;
+        return fragments.get(position);
     }
 
     @Override

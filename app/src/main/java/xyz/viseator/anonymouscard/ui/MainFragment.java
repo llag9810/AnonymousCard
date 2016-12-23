@@ -32,21 +32,10 @@ import xyz.viseator.anonymouscard.network.ComUtil;
 
 public class MainFragment extends Fragment {
     @BindView(R.id.main_recyclerView)
-    RecyclerView recyclerView;
+    public RecyclerView recyclerView;
     String name;
     private ArrayList<UDPDataPackage> udpDataPackages;
     private ComUtil comUtil;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == ComUtil.BROADCAST_PORT) {
-                UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.byteToObject((byte[]) msg.obj);
-                udpDataPackages.add(udpDataPackage);
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
-        }
-    };
 
     public String getName() {
         return name;
@@ -82,11 +71,5 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
         recyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    private void init() {
-        comUtil = new ComUtil(handler);
-        comUtil.startRecieveMsg();
-
     }
 }

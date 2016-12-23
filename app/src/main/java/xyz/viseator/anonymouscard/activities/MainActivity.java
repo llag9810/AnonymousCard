@@ -2,14 +2,19 @@ package xyz.viseator.anonymouscard.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -17,36 +22,57 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.adapter.ViewPagerAdapter;
+import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
+import xyz.viseator.anonymouscard.network.ComUtil;
+import xyz.viseator.anonymouscard.network.SingleUtil;
+import xyz.viseator.anonymouscard.ui.MainFragment;
 
 public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
     private int cardId = 0;
-
+    private MainFragment mainFragment,mainFragment1,mainFragment2;
+    private List<Fragment> fragments;
+    private ViewPagerAdapter viewPagerAdapter;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
     private ArrayList<DataPackage> dataPackages;
     private ArrayList<UDPDataPackage> udpDataPackages;
-
+    private ComUtil comUtil;
+    private SingleUtil singleUtil;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case ComUtil.BROADCAST_PORT:
+                    UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.byteToObject((byte[]) msg.obj);
+                    udpDataPackages.add(udpDataPackage);
+                    mainFragment.recyclerView.getAdapter().notifyDataSetChanged();
+                    break;
+                case SingleUtil.SINGLE_PORT:
+                    Toast.makeText(MainActivity.this,"收到打包",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(MainActivity.this);
-
         dataPackages = new ArrayList<>();
         udpDataPackages = new ArrayList<>();
-
         initViews();
+        init();
     }
 
     private void initViews() {
-        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), this, dataPackages));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         View view1 = getLayoutInflater().inflate(R.layout.tab_view, null);
@@ -60,7 +86,18 @@ public class MainActivity extends FragmentActivity {
         tabLayout.getTabAt(1).setCustomView(view2);
         tabLayout.getTabAt(2).setCustomView(view3);
 
-
+        fragments=new ArrayList<>();
+        mainFragment = new MainFragment();
+        mainFragment.setName("主页");
+        mainFragment1 = new MainFragment();
+        mainFragment1.setName("次页");
+        mainFragment2 = new MainFragment();
+        mainFragment2.setName("三页");
+        fragments.add(mainFragment);
+        fragments.add(mainFragment1);
+        fragments.add(mainFragment2);
+        viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager(),MainActivity.this,fragments);
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
     @OnClick(R.id.float_button)
@@ -97,5 +134,12 @@ public class MainActivity extends FragmentActivity {
 
     public ArrayList<UDPDataPackage> getUdpDataPackages() {
         return udpDataPackages;
+    }
+
+    private void init() {
+        comUtil = new ComUtil(handler);
+        comUtil.startRecieveMsg();
+        singleUtil=new SingleUtil(handler);
+        singleUtil.startRecieveMsg();
     }
 }
