@@ -37,7 +37,6 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="6dp"
             android:background="@drawable/edit_title"
-            android:hint="标题"
             android:paddingBottom="10dp"
             android:paddingStart="170dp"
 
@@ -51,7 +50,6 @@
             android:layout_marginStart="6dp"
             android:background="@drawable/content"
             android:gravity="start"
-            android:hint="内容"
             android:padding="10dp"
             />
 
@@ -62,7 +60,8 @@
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:clickable="true"
-            android:padding="3dp"
+            android:padding="2dp"
+            android:layout_margin="10dp"
             android:src="@drawable/image_button"
             />
 

@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,8 @@ public class MainActivity extends FragmentActivity {
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+    @BindView(R.id.main_toolbar_text)
+    TextView toolbarTitle;
 
     private ArrayList<DataPackage> dataPackages;
     private ArrayList<UDPDataPackage> udpDataPackages;
@@ -91,6 +94,7 @@ public class MainActivity extends FragmentActivity {
         mainFragment = new MainFragment();
         mainFragment1 = new MainFragment();
         mainFragment2 = new MyMessageFragment();
+
         fragments.add(mainFragment);
         fragments.add(mainFragment1);
         fragments.add(mainFragment2);
@@ -98,6 +102,7 @@ public class MainActivity extends FragmentActivity {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+
         View view1 = getLayoutInflater().inflate(R.layout.tab_view, null);
         ((ImageView) view1.findViewById(R.id.tab_image)).setImageResource(R.drawable.left_icon_selector);
         View view2 = getLayoutInflater().inflate(R.layout.tab_view, null);
@@ -105,9 +110,38 @@ public class MainActivity extends FragmentActivity {
         View view3 = getLayoutInflater().inflate(R.layout.tab_view, null);
         ((ImageView) view3.findViewById(R.id.tab_image)).setImageResource(R.drawable.right_icon_selector);
 
+        toolbarTitle.setText("一起抢贺卡吧");
         tabLayout.getTabAt(0).setCustomView(view1);
         tabLayout.getTabAt(1).setCustomView(view2);
         tabLayout.getTabAt(2).setCustomView(view3);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        toolbarTitle.setText("一起抢贺卡吧");
+                        break;
+                    case 1:
+                        toolbarTitle.setText("我的贺卡");
+                        break;
+                    case 2:
+                        toolbarTitle.setText("我的收获");
+                        break;
+                    default:
+
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 
     }
