@@ -116,7 +116,7 @@ public class SingleUtil {
                     e.printStackTrace();
                 } finally {
                     try {
-//                        socket.close();
+                        socket.close();
                         os.close();
                         objectos.close();
                     } catch (IOException e) {
@@ -168,61 +168,66 @@ public class SingleUtil {
                 }
             }
         }
-        class ReadSingleForBack implements Runnable {
-            @Override
-            public void run() {
-                ServerSocket serverSocket = null;
-                try {
-                    serverSocket = new ServerSocket(SINGLE_PORT);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                while (true) {
-                    Socket socket = null;
-                    InputStream in = null;
-                    ObjectInputStream objinput = null;
-                    if (serverSocket != null) {
+
+
+    }
+
+    class ReadSingleForBack implements Runnable {
+        @Override
+        public void run() {
+            ServerSocket serverSocket = null;
+            try {
+                serverSocket = new ServerSocket(SINGLE_PORT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            while (true) {
+                Socket socket = null;
+                InputStream in = null;
+                ObjectInputStream objinput = null;
+                if (serverSocket != null) {
+                    try {
+                        socket = serverSocket.accept();
+                        in = socket.getInputStream();
+                        objinput = new ObjectInputStream(in);
+                        DataPackage data1 = (DataPackage) objinput.readObject();
+                        int sign = data1.getSign();
+                        if (sign == 0) {
+                            Message msg = new Message();
+                            msg.what = SINGLE_PORT;
+                            msg.obj = data1;
+                            handler.sendMessage(msg);
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } finally {
                         try {
-                            socket = serverSocket.accept();
-                            in = socket.getInputStream();
-                            objinput = new ObjectInputStream(in);
-                            DataPackage data1 = (DataPackage) objinput.readObject();
-                            int sign = data1.getSign();
-                            if (sign == 0) {
-                                Log.d("信息:", "收到请求大包");
-                                sendConcreteData(data1.getId(), data1.getIp());
-                            }
-                        } catch (IOException | ClassNotFoundException e) {
+                            socket.shutdownOutput();
+                            objinput.close();
+                            in.close();
+                            socket.close();
+                        } catch (IOException e) {
                             e.printStackTrace();
-                        } finally {
-                            try {
-                                socket.shutdownOutput();
-                                objinput.close();
-                                in.close();
-                                socket.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
                         }
                     }
                 }
             }
-
         }
 
-        public void startRecieveMsgForBack(){
-            threadForback=new Thread(new ReadSingleForBack());
-            threadForback.start();
-        }
+    }
 
-        public void closeThreadForBack(){
-            threadForback.destroy();
-        }
+    public void sendConcreteData(String cardId, String ipAddress) {
+        DataPackage dataPackage = dataStore.getDataById(cardId);
+        dataPackage.setSign(0);
+        sendSingle0(dataPackage, ipAddress);
+    }
 
-        public void sendConcreteData(String cardId, String ipAddress) {
-            DataPackage dataPackage = dataStore.getDataById(cardId);
-            dataPackage.setSign(0);
-            sendSingle0(dataPackage, ipAddress);
-        }
+    public void startRecieveMsgForBack() {
+        threadForback = new Thread(new ReadSingleForBack());
+        threadForback.start();
+    }
+
+    public void closeThreadForBack() {
+        threadForback.destroy();
     }
 }

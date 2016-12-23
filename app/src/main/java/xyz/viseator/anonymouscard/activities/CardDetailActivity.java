@@ -58,7 +58,7 @@ public class CardDetailActivity extends AppCompatActivity {
 
     private void init() {
         singleUtil = new SingleUtil(handler);
-        singleUtil.startRecieveMsg();
+        singleUtil.startRecieveMsgForBack();
     }
 
 }
