@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+                                                                                                                                            import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,13 +32,15 @@ import static android.app.Activity.RESULT_OK;
  * viseator@gmail.com
  */
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements MainRecyclerViewAdapter.OnItemClickListener {
     private static final String TAG = "wudi MainFragment";
+
     @BindView(R.id.main_recyclerView)
     public RecyclerView recyclerView;
     String name;
     private ArrayList<UDPDataPackage> udpDataPackages;
     private ComUtil comUtil;
+    private String mId;
 
     public String getName() {
         return name;
@@ -57,15 +59,7 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.hasFixedSize();
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
-        mainRecyclerViewAdapter.setOnItemClickListener(new MainRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClickListener(View view, String id) {
-                Intent intent = new Intent(getContext(), CardDetailActivity.class);
-                intent.putExtra("data", ((MainActivity) getActivity()).getDataById(id));
-                intent.putExtra("allDataPackages", ((MainActivity) getActivity()).getDataPackages());
-                startActivityForResult(intent, 11);
-            }
-        });
+        mainRecyclerViewAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(mainRecyclerViewAdapter);
 
         return view;
@@ -89,5 +83,19 @@ public class MainFragment extends Fragment {
                 userInfo.setCandys(userInfo.getCandys() - 1);
             }
         }
+    }
+
+    public void sendRequest(){
+        Intent intent = new Intent(getContext(), CardDetailActivity.class);
+        intent.putExtra("data", ((MainActivity) getActivity()).getDataById(mId));
+        intent.putExtra("allDataPackages", ((MainActivity) getActivity()).getDataPackages());
+        startActivityForResult(intent, 11);
+    }
+
+    @Override
+    public void onItemClickListener(View view, String id) {
+        mId=id;
+        CustomDialog dialog=new CustomDialog(getContext(),R.style.dialog,MainFragment.this);
+        dialog.show();
     }
 }

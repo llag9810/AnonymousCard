@@ -1,5 +1,6 @@
 package xyz.viseator.anonymouscard.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,13 +30,14 @@ import xyz.viseator.anonymouscard.data.UserInfo;
 import xyz.viseator.anonymouscard.network.ComUtil;
 import xyz.viseator.anonymouscard.network.TcpServer;
 import xyz.viseator.anonymouscard.ui.MainFragment;
+import xyz.viseator.anonymouscard.ui.MyMessageFragment;
 
 public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
     private int cardId = 0;
-    private MainFragment mainFragment, mainFragment1,
-            mainFragment2;
+    private MainFragment mainFragment, mainFragment1;
+    private MyMessageFragment mainFragment2;
     private List<Fragment> fragments;
     private ViewPagerAdapter viewPagerAdapter;
     private UserInfo userInfo;
@@ -50,6 +52,7 @@ public class MainActivity extends FragmentActivity {
     private ComUtil comUtil;
     private TcpServer tcpServer;
     private DataStore dataStore;
+    public static Context context;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -80,13 +83,14 @@ public class MainActivity extends FragmentActivity {
         userInfo = new UserInfo();
         init();
         initViews();
+        context=MainActivity.this;
     }
 
     private void initViews() {
         fragments = new ArrayList<>();
         mainFragment = new MainFragment();
         mainFragment1 = new MainFragment();
-        mainFragment2 = new MainFragment();
+        mainFragment2 = new MyMessageFragment();
         fragments.add(mainFragment);
         fragments.add(mainFragment1);
         fragments.add(mainFragment2);
