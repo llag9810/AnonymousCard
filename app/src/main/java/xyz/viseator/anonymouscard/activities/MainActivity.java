@@ -52,13 +52,12 @@ public class MainActivity extends FragmentActivity {
             switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
                     UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.byteToObject((byte[]) msg.obj);
-                    udpDataPackages.add(udpDataPackage);
-                    dataStore.setDataPackages(dataPackages);
-                    mainFragment.recyclerView.getAdapter().notifyDataSetChanged();
-                    Log.d(TAG, "handleMessage: Receive UDP");
-                    break;
-                case SingleUtil.SINGLE_PORT:
-                    DataPackage dataPackage = (DataPackage) msg.obj;
+                    if (getDataById(udpDataPackage.getId()) == null) {
+                        udpDataPackages.add(udpDataPackage);
+                        dataStore.setDataPackages(dataPackages);
+                        mainFragment.recyclerView.getAdapter().notifyDataSetChanged();
+                        Log.d(TAG, "handleMessage: Receive UDP");
+                    }
                     break;
             }
         }

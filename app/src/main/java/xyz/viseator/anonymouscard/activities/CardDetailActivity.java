@@ -39,6 +39,7 @@ public class CardDetailActivity extends AppCompatActivity {
                 title.setText(dataPackage.getTitle());
                 if (dataPackage.getBitmap() == null) Log.d(TAG, "handleMessage: Error bitmap");
                 imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap() ));
+                singleUtil.closeThreadForBack();
             }
         }
     };
