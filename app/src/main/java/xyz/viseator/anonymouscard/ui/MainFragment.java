@@ -9,10 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.adapter.MainRecyclerViewAdapter;
+import xyz.viseator.anonymouscard.data.DataPackage;
+import xyz.viseator.anonymouscard.data.UDPDataPackage;
 
 /**
  * Created by viseator on 2016/12/20.
@@ -24,6 +28,14 @@ public class MainFragment extends Fragment {
     @BindView(R.id.main_recyclerView)
     RecyclerView recyclerView;
     String name;
+    private ArrayList<UDPDataPackage> udpDataPackages;
+
+    public void setDataPackages(ArrayList<DataPackage> dataPackages) {
+        udpDataPackages = new ArrayList<>();
+        for (DataPackage dataPackage : dataPackages) {
+            udpDataPackages.add(new UDPDataPackage(dataPackage));
+        }
+    }
 
     public String getName() {
         return name;
@@ -40,7 +52,7 @@ public class MainFragment extends Fragment {
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.hasFixedSize();
-        recyclerView.setAdapter(new MainRecyclerViewAdapter(getActivity()));
+        recyclerView.setAdapter(new MainRecyclerViewAdapter(getActivity(), udpDataPackages));
         return view;
     }
 }

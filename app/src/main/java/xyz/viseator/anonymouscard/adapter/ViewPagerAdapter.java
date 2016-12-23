@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
+
+import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.ui.MainFragment;
 
 /**
@@ -16,10 +19,12 @@ import xyz.viseator.anonymouscard.ui.MainFragment;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    public ViewPagerAdapter(FragmentManager fm, Context context) {
+    private ArrayList<DataPackage> dataPackages;
+
+    public ViewPagerAdapter(FragmentManager fm, Context context, ArrayList<DataPackage> dataPackages) {
         super(fm);
         this.context = context;
-
+        this.dataPackages = dataPackages;
     }
 
     @Override
@@ -27,6 +32,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 MainFragment mainFragment = new MainFragment();
+                mainFragment.setDataPackages(dataPackages);
                 mainFragment.setName("主页");
                 return mainFragment;
             case 1:
