@@ -26,7 +26,6 @@ public class SendNewCardActivity extends AppCompatActivity {
     private static final int GET_IMAGE = 1;
     private static final String TAG = "wudi SendNewCard";
     private Uri uri;
-    private Bitmap newBitmap;
     Bitmap bitmap;
     @BindView(R.id.send_image)
     ImageView imageView;

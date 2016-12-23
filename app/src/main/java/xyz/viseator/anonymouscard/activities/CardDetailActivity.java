@@ -40,18 +40,13 @@ public class CardDetailActivity extends AppCompatActivity {
             if (msg.what == TcpClient.SERVER_PORT) {
                 Log.d(TAG, "handleMessage: Receive Data");
                 dataPackage = (DataPackage) msg.obj;
-                try {
-                    content.setText(dataPackage.getContent());
-                    title.setText(dataPackage.getTitle());
+                content.setText(dataPackage.getContent());
+                title.setText(dataPackage.getTitle());
+                if (dataPackage.getBitmap() != null)
                     imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
-                    Intent intent = new Intent();
-                    intent.putExtra("data", dataPackage);
-                    setResult(RESULT_OK, intent);
-                } catch (Exception e) {
-                    Toast.makeText(CardDetailActivity.this, "卡片不翼而飞了……", Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_CANCELED);
-                    finish();
-                }
+                Intent intent = new Intent();
+                intent.putExtra("data", dataPackage);
+                setResult(RESULT_OK, intent);
             }
         }
     };
@@ -70,7 +65,9 @@ public class CardDetailActivity extends AppCompatActivity {
                 contains = true;
                 content.setText(dataPackage.getContent());
                 title.setText(dataPackage.getTitle());
-                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+                if (dataPackage.getBitmap() != null)
+                    imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+
                 break;
             }
         }

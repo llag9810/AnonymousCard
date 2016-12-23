@@ -26,6 +26,7 @@ import xyz.viseator.anonymouscard.adapter.ViewPagerAdapter;
 import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.DataStore;
+import xyz.viseator.anonymouscard.data.SaveData;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.data.UserInfo;
 import xyz.viseator.anonymouscard.network.ComUtil;
@@ -36,7 +37,7 @@ import xyz.viseator.anonymouscard.ui.MyMessageFragment;
 public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
-    private int cardId = 0;
+    private int cardId ;
     private MainFragment mainFragment, mainFragment1;
     private MyMessageFragment mainFragment2;
     private List<Fragment> fragments;
@@ -80,13 +81,13 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(MainActivity.this);
-        dataPackages = new ArrayList<>();
-        udpDataPackages = new ArrayList<>();
+        getDataFromFile();
         dataStore = new DataStore();
+        dataStore.setDataPackages(dataPackages);
         userInfo = new UserInfo();
         init();
         initViews();
-        context=MainActivity.this;
+        context = MainActivity.this;
     }
 
     private void initViews() {
@@ -204,4 +205,44 @@ public class MainActivity extends FragmentActivity {
         return userInfo;
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: Write");
+        SaveData.writeToFile(this, dataPackages, "dataPackages");
+        SaveData.writeToFile(this, udpDataPackages, "udpDataPackages");
+        SaveData.writeToFile(this, cardId, "cardId");
+    }
+
+
+    private void getDataFromFile() {
+        ArrayList<DataPackage> dataPackages1 = (ArrayList<DataPackage>)SaveData.readFromFile(this,"dataPackages");
+        if (dataPackages1 == null) {
+            Log.d(TAG, "onResume: init");
+            dataPackages = new ArrayList<>();
+        } else {
+            dataPackages = dataPackages1;
+            Log.d(TAG, "onResume: dataPackage" + dataPackages.size());
+        }
+
+
+        ArrayList<UDPDataPackage> udpData = (ArrayList<UDPDataPackage>)SaveData.readFromFile(this,"udpDataPackages");
+        if (udpData == null) {
+            Log.d(TAG, "onResume: init udp");
+            udpDataPackages = new ArrayList<>();
+        } else {
+            udpDataPackages = udpData;
+            Log.d(TAG, "onResume: udpDataPackage" + udpDataPackages.size());
+        }
+
+        Integer cardNum = (Integer) SaveData.readFromFile(this, "cardId");
+        if (cardNum == null) {
+            cardId = 0;
+            Log.d(TAG, "getDataFromFile: Init Id");
+        } else {
+            cardId = cardNum;
+            Log.d(TAG, "getDataFromFile: id:" + cardId);
+        }
+    }
 }
