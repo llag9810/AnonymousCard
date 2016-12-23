@@ -1,7 +1,6 @@
 package xyz.viseator.anonymouscard.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -42,10 +42,8 @@ public class CardDetailActivity extends AppCompatActivity {
                 dataPackage = (DataPackage) msg.obj;
                 content.setText(dataPackage.getContent());
                 title.setText(dataPackage.getTitle());
-                Bitmap bitmap=ConvertData.byteToBitmap(dataPackage.getBitmap());
-                if(bitmap!=null){
-                    imageView.setImageBitmap(bitmap);
-                }
+                if (dataPackage.getBitmap() != null)
+                    imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
                 Intent intent = new Intent();
                 intent.putExtra("data", dataPackage);
                 setResult(RESULT_OK, intent);
@@ -59,7 +57,7 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_show_content);
         ButterKnife.bind(this);
-        dataPackages = (ArrayList<DataPackage>) (getIntent().getSerializableExtra("allDataPackages"));
+        dataPackages = MainActivity.dataPackages;
         receivedDataPackage = (UDPDataPackage) (getIntent().getSerializableExtra("data"));
         boolean contains = false;
         for (DataPackage dataPackage : dataPackages) {
@@ -67,15 +65,22 @@ public class CardDetailActivity extends AppCompatActivity {
                 contains = true;
                 content.setText(dataPackage.getContent());
                 title.setText(dataPackage.getTitle());
-                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+                if (dataPackage.getBitmap() != null)
+                    imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+
                 break;
             }
         }
         if (!contains) {
             tcpClient = new TcpClient();
-            tcpClient.sendRequest(receivedDataPackage.getIpAddress(), receivedDataPackage, handler);
+            try {
+                tcpClient.sendRequest(receivedDataPackage.getIpAddress(), receivedDataPackage, handler);
+            } catch (NullPointerException e) {
+                Toast.makeText(CardDetailActivity.this, "卡片不翼而飞了……", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_CANCELED);
+                finish();
+            }
         }
     }
-
 
 }

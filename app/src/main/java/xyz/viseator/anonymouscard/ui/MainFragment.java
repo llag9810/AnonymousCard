@@ -41,6 +41,15 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
     private ArrayList<UDPDataPackage> udpDataPackages;
     private ComUtil comUtil;
     private String mId;
+    private int fragmentId;
+
+    public int getFragmentId() {
+        return fragmentId;
+    }
+
+    public void setFragmentId(int fragmentId) {
+        this.fragmentId = fragmentId;
+    }
 
     public String getName() {
         return name;
@@ -58,7 +67,17 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
         udpDataPackages = ((MainActivity) getActivity()).getUdpDataPackages();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.hasFixedSize();
-        MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
+        MainRecyclerViewAdapter mainRecyclerViewAdapter;
+        if (fragmentId == 1) {
+            mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
+        } else {
+            udpDataPackages = new ArrayList<>();
+            for (DataPackage dataPackage : MainActivity.dataPackages) {
+                UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
+                udpDataPackages.add(udpDataPackage);
+            }
+            mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
+        }
         mainRecyclerViewAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(mainRecyclerViewAdapter);
 
@@ -85,17 +104,16 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
         }
     }
 
-    public void sendRequest(){
+    public void sendRequest() {
         Intent intent = new Intent(getContext(), CardDetailActivity.class);
         intent.putExtra("data", ((MainActivity) getActivity()).getDataById(mId));
-        intent.putExtra("allDataPackages", ((MainActivity) getActivity()).getDataPackages());
         startActivityForResult(intent, 11);
     }
 
     @Override
     public void onItemClickListener(View view, String id) {
-        mId=id;
-        CustomDialog dialog=new CustomDialog(getContext(),R.style.dialog,MainFragment.this);
+        mId = id;
+        CustomDialog dialog = new CustomDialog(getContext(), R.style.dialog, MainFragment.this);
         dialog.show();
     }
 }

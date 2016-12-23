@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import xyz.viseator.anonymouscard.R;
 
@@ -46,12 +45,10 @@ public class CustomDialog extends Dialog
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.savebtn:
-                Toast.makeText(getContext(),"hello",Toast.LENGTH_SHORT).show();
                 fragment.sendRequest();
                 cancel();
                 break;
             case R.id.cancelbtn:
-                Toast.makeText(getContext(),"world",Toast.LENGTH_SHORT).show();
                 cancel();
                 break;
         }

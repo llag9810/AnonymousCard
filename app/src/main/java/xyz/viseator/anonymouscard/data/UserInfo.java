@@ -1,12 +1,16 @@
 package xyz.viseator.anonymouscard.data;
 
+import java.io.Serializable;
+
 /**
  * Created by viseator on 2016/12/23.
  * Wudi
  * viseator@gmail.com
  */
 
-public class UserInfo {
+public class UserInfo implements Serializable {
+    final long serialVersionUID = 66666666L;
+
     private int candys;
 
     public UserInfo() {

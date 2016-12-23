@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ import xyz.viseator.anonymouscard.adapter.ViewPagerAdapter;
 import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.DataStore;
+import xyz.viseator.anonymouscard.data.SaveData;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.data.UserInfo;
 import xyz.viseator.anonymouscard.network.ComUtil;
@@ -35,23 +38,25 @@ import xyz.viseator.anonymouscard.ui.MyMessageFragment;
 public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
-    private int cardId = 0;
+    private static int cardId;
     private MainFragment mainFragment, mainFragment1;
     private MyMessageFragment mainFragment2;
     private List<Fragment> fragments;
     private ViewPagerAdapter viewPagerAdapter;
-    private UserInfo userInfo;
+    private static UserInfo userInfo;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+    @BindView(R.id.main_toolbar_text)
+    TextView toolbarTitle;
 
-    private ArrayList<DataPackage> dataPackages;
-    private ArrayList<UDPDataPackage> udpDataPackages;
+    public static ArrayList<DataPackage> dataPackages;
+    private static ArrayList<UDPDataPackage> udpDataPackages;
 
-    private ComUtil comUtil;
+    private static ComUtil comUtil;
     private TcpServer tcpServer;
-    private DataStore dataStore;
+    private static DataStore dataStore;
     public static Context context;
     private Handler handler = new Handler() {
         @Override
@@ -67,7 +72,9 @@ public class MainActivity extends FragmentActivity {
                         Log.d(TAG, "handleMessage: Receive UDP");
                     }
                     break;
-
+                case TcpServer.RECEIVE_REQUEST:
+                    Toast.makeText(MainActivity.this, "贺卡被打开，收到糖果一个", Toast.LENGTH_SHORT).show();
+                    userInfo.setCandys(userInfo.getCandys() + 1);
             }
         }
     };
@@ -77,20 +84,23 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(MainActivity.this);
-        dataPackages = new ArrayList<>();
-        udpDataPackages = new ArrayList<>();
+        getDataFromFile();
         dataStore = new DataStore();
-        userInfo = new UserInfo();
+        dataStore.setDataPackages(dataPackages);
         init();
         initViews();
-        context=MainActivity.this;
+        context = MainActivity.this;
     }
 
     private void initViews() {
         fragments = new ArrayList<>();
         mainFragment = new MainFragment();
+        mainFragment.setFragmentId(1);
         mainFragment1 = new MainFragment();
+        mainFragment1.setFragmentId(2);
         mainFragment2 = new MyMessageFragment();
+        mainFragment2.setUserInfo(userInfo);
+
         fragments.add(mainFragment);
         fragments.add(mainFragment1);
         fragments.add(mainFragment2);
@@ -98,6 +108,7 @@ public class MainActivity extends FragmentActivity {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+
         View view1 = getLayoutInflater().inflate(R.layout.tab_view, null);
         ((ImageView) view1.findViewById(R.id.tab_image)).setImageResource(R.drawable.left_icon_selector);
         View view2 = getLayoutInflater().inflate(R.layout.tab_view, null);
@@ -105,9 +116,38 @@ public class MainActivity extends FragmentActivity {
         View view3 = getLayoutInflater().inflate(R.layout.tab_view, null);
         ((ImageView) view3.findViewById(R.id.tab_image)).setImageResource(R.drawable.right_icon_selector);
 
+        toolbarTitle.setText("一起抢贺卡吧");
         tabLayout.getTabAt(0).setCustomView(view1);
         tabLayout.getTabAt(1).setCustomView(view2);
         tabLayout.getTabAt(2).setCustomView(view3);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        toolbarTitle.setText("一起抢贺卡吧");
+                        break;
+                    case 1:
+                        toolbarTitle.setText("我的贺卡");
+                        break;
+                    case 2:
+                        toolbarTitle.setText("我的女装");
+                        break;
+                    default:
+
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 
     }
@@ -160,7 +200,7 @@ public class MainActivity extends FragmentActivity {
 
     private void init() {
         tcpServer = new TcpServer(dataStore);
-        tcpServer.startServer();
+        tcpServer.startServer(handler);
         comUtil = new ComUtil(handler);
         comUtil.startRecieveMsg();
 
@@ -170,4 +210,60 @@ public class MainActivity extends FragmentActivity {
         return userInfo;
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: Write");
+        SaveData.writeToFile(this, dataPackages, "dataPackages");
+        SaveData.writeToFile(this, udpDataPackages, "udpDataPackages");
+        SaveData.writeToFile(this, cardId, "cardId");
+        SaveData.writeToFile(this, userInfo, "userInfo");
+    }
+
+    private void getDataFromFile() {
+        ArrayList<DataPackage> dataPackages1 = (ArrayList<DataPackage>) SaveData.readFromFile(this, "dataPackages");
+        if (dataPackages1 == null) {
+            Log.d(TAG, "onResume: init");
+            dataPackages = new ArrayList<>();
+        } else {
+            dataPackages = dataPackages1;
+            Log.d(TAG, "onResume: dataPackage" + dataPackages.size());
+        }
+
+
+        ArrayList<UDPDataPackage> udpData = (ArrayList<UDPDataPackage>) SaveData.readFromFile(this, "udpDataPackages");
+        if (udpData == null) {
+            Log.d(TAG, "onResume: init udp");
+            udpDataPackages = new ArrayList<>();
+        } else {
+            udpDataPackages = udpData;
+            Log.d(TAG, "onResume: udpDataPackage" + udpDataPackages.size());
+        }
+
+        Integer cardNum = (Integer) SaveData.readFromFile(this, "cardId");
+        if (cardNum == null) {
+            cardId = 0;
+            Log.d(TAG, "getDataFromFile: Init Id");
+        } else {
+            cardId = cardNum;
+            Log.d(TAG, "getDataFromFile: id:" + cardId);
+        }
+
+        UserInfo userIn = (UserInfo) SaveData.readFromFile(this, "userInfo");
+        if (userIn == null) {
+            userInfo = new UserInfo();
+        } else {
+            userInfo = userIn;
+        }
+    }
+
+    public static void sendDataByUdp(DataPackage dataPackage) {
+        comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
+        dataPackages.add(dataPackage);
+        udpDataPackages.add(new UDPDataPackage(dataPackage));
+        dataStore.setDataPackages(dataPackages);
+        cardId++;
+        userInfo.setCandys(userInfo.getCandys() - 5);
+    }
 }

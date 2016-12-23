@@ -26,7 +26,6 @@ public class SendNewCardActivity extends AppCompatActivity {
     private static final int GET_IMAGE = 1;
     private static final String TAG = "wudi SendNewCard";
     private Uri uri;
-    private Bitmap newBitmap;
     Bitmap bitmap;
     @BindView(R.id.send_image)
     ImageView imageView;
@@ -54,9 +53,8 @@ public class SendNewCardActivity extends AppCompatActivity {
         if (null != bitmap) {
             dataPackage.setBitmap(ConvertData.bitmapToByte(bitmap));
         }
-        Intent intent = new Intent();
-        intent.putExtra("data", dataPackage);
-        setResult(RESULT_OK, intent);
+        MainActivity.sendDataByUdp(dataPackage);
+        setResult(RESULT_CANCELED);
         finish();
     }
 
@@ -76,7 +74,7 @@ public class SendNewCardActivity extends AppCompatActivity {
             ContentResolver cr = this.getContentResolver();
             try {
                 bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                if (bitmap.getWidth() > 480 || bitmap.getHeight() > 640) {
+                if (bitmap.getWidth() > 720 || bitmap.getHeight() > 1280) {
                     bitmap = ConvertData.scaleDownBitmap(bitmap);
                 }
                 Log.d(TAG, "onActivityResult: " + bitmap.getWidth() + " " + bitmap.getHeight());

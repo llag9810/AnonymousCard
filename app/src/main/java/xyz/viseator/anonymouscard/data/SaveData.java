@@ -2,10 +2,9 @@ package xyz.viseator.anonymouscard.data;
 
 import android.content.Context;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Created by viseator on 2016/12/21.
@@ -14,43 +13,25 @@ import java.io.IOException;
  */
 
 public class SaveData {
-    public static void writeToFile(Context context, byte[] data, String fileName) {
-        FileOutputStream fos = null;
+    public static void writeToFile(Context context, Object object, String fileName) {
+
+        ObjectOutputStream oos = null;
         try {
-            fos = context.openFileOutput(fileName + ".txt", Context.MODE_PRIVATE);
-            fos.write(data);
-        } catch (java.io.IOException e) {
+            oos = new ObjectOutputStream(context.openFileOutput(fileName, Context.MODE_PRIVATE));
+            oos.writeObject(object);
+            oos.close();
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-    public static byte[] readFromFile(Context context, String fileName) {
-        FileInputStream fis = null;
-        byte[] data = null;
+    public static Object readFromFile(Context context, String fileName) {
         try {
-            fis = context.openFileInput(fileName + ".txt");
-            data = new byte[fis.available()];
-            fis.read(data);
-        } catch (IOException e) {
+            ObjectInputStream objectInputStream = new ObjectInputStream(context.openFileInput(fileName));
+            return objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
         }
-        return data;
+        return null;
     }
 }
