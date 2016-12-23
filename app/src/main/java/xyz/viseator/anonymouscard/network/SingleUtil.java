@@ -100,6 +100,7 @@ public class SingleUtil {
                 OutputStream os = null;
                 ObjectOutputStream objectos = null;
                 try {
+                    Log.d(ipAddress,"11111111111111111");
                     socket = new Socket(ipAddress, SINGLE_PORT);
                     DataPackage data = new DataPackage();
                     data.setSign(1);
@@ -181,7 +182,8 @@ public class SingleUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            while (true) {
+            boolean swh=true;
+            while (swh) {
                 Socket socket = null;
                 InputStream in = null;
                 ObjectInputStream objinput = null;
@@ -206,6 +208,7 @@ public class SingleUtil {
                             objinput.close();
                             in.close();
                             socket.close();
+                            swh=false;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -225,9 +228,5 @@ public class SingleUtil {
     public void startRecieveMsgForBack() {
         threadForback = new Thread(new ReadSingleForBack());
         threadForback.start();
-    }
-
-    public void closeThreadForBack() {
-        threadForback.destroy();
     }
 }
