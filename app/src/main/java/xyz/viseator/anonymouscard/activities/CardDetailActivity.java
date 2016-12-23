@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
@@ -34,8 +35,8 @@ public class CardDetailActivity extends AppCompatActivity {
             if (msg.what == SingleUtil.SINGLE_PORT) {
                 Log.d(TAG, "handleMessage: Receive Data");
                 dataPackage = (DataPackage) msg.obj;
-//                content.setText(dataPackage.getContent());
-//                title.setText(dataPackage.getTitle());
+                content.setText(dataPackage.getContent());
+                title.setText(dataPackage.getTitle());
                 if (dataPackage.getBitmap() == null) Log.d(TAG, "handleMessage: Error bitmap");
                 imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap() ));
             }
@@ -47,6 +48,7 @@ public class CardDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
+        ButterKnife.bind(this);
         init();
         SingleUtil singleUtil = new SingleUtil();
         receivedDataPackage = (UDPDataPackage) (getIntent().getSerializableExtra("data"));
