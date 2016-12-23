@@ -57,7 +57,6 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_show_content);
         ButterKnife.bind(this);
-//        dataPackages = (ArrayList<DataPackage>) (getIntent().getSerializableExtra("allDataPackages"));
         dataPackages = MainActivity.dataPackages;
         receivedDataPackage = (UDPDataPackage) (getIntent().getSerializableExtra("data"));
         boolean contains = false;

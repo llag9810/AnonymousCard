@@ -38,12 +38,12 @@ import xyz.viseator.anonymouscard.ui.MyMessageFragment;
 public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
-    private int cardId;
+    private static int cardId;
     private MainFragment mainFragment, mainFragment1;
     private MyMessageFragment mainFragment2;
     private List<Fragment> fragments;
     private ViewPagerAdapter viewPagerAdapter;
-    private UserInfo userInfo;
+    private static UserInfo userInfo;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
@@ -54,9 +54,9 @@ public class MainActivity extends FragmentActivity {
     public static ArrayList<DataPackage> dataPackages;
     private static ArrayList<UDPDataPackage> udpDataPackages;
 
-    private ComUtil comUtil;
+    private static ComUtil comUtil;
     private TcpServer tcpServer;
-    private DataStore dataStore;
+    private static DataStore dataStore;
     public static Context context;
     private Handler handler = new Handler() {
         @Override
@@ -256,5 +256,14 @@ public class MainActivity extends FragmentActivity {
         } else {
             userInfo = userIn;
         }
+    }
+
+    public static void sendDataByUdp(DataPackage dataPackage) {
+        comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
+        dataPackages.add(dataPackage);
+        udpDataPackages.add(new UDPDataPackage(dataPackage));
+        dataStore.setDataPackages(dataPackages);
+        cardId++;
+        userInfo.setCandys(userInfo.getCandys() - 5);
     }
 }
