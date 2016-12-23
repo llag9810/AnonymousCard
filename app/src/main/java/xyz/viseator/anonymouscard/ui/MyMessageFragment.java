@@ -29,6 +29,12 @@ public class MyMessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.mymessage_fragment,container,false);
         ButterKnife.bind(this,view);
+        support.setText("10");
+        negative.setText("10");
         return view;
+    }
+
+    public void setSweet(String str){
+        good.setText(str);
     }
 }
