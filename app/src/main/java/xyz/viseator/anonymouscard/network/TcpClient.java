@@ -29,7 +29,7 @@ public class TcpClient {
 
     class SendData implements Runnable {
         @Override
-        public void run() {
+        public void run()  {
             try {
                 Socket socket = new Socket(ipAddress, SERVER_PORT);
                 socket.setReuseAddress(true);
@@ -47,7 +47,8 @@ public class TcpClient {
                 msg.what = SERVER_PORT;
                 msg.obj = dataPackage;
                 handler.sendMessage(msg);
-            } catch (IOException | ClassNotFoundException e) {
+            }
+            catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -39,12 +40,18 @@ public class CardDetailActivity extends AppCompatActivity {
             if (msg.what == TcpClient.SERVER_PORT) {
                 Log.d(TAG, "handleMessage: Receive Data");
                 dataPackage = (DataPackage) msg.obj;
-                content.setText(dataPackage.getContent());
-                title.setText(dataPackage.getTitle());
-                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
-                Intent intent = new Intent();
-                intent.putExtra("data", dataPackage);
-                setResult(RESULT_OK, intent);
+                try {
+                    content.setText(dataPackage.getContent());
+                    title.setText(dataPackage.getTitle());
+                    imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+                    Intent intent = new Intent();
+                    intent.putExtra("data", dataPackage);
+                    setResult(RESULT_OK, intent);
+                } catch (Exception e) {
+                    Toast.makeText(CardDetailActivity.this, "卡片不翼而飞了……", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
             }
         }
     };
@@ -69,7 +76,13 @@ public class CardDetailActivity extends AppCompatActivity {
         }
         if (!contains) {
             tcpClient = new TcpClient();
-            tcpClient.sendRequest(receivedDataPackage.getIpAddress(), receivedDataPackage, handler);
+            try {
+                tcpClient.sendRequest(receivedDataPackage.getIpAddress(), receivedDataPackage, handler);
+            } catch (NullPointerException e) {
+                Toast.makeText(CardDetailActivity.this, "卡片不翼而飞了……", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_CANCELED);
+                finish();
+            }
         }
     }
 
