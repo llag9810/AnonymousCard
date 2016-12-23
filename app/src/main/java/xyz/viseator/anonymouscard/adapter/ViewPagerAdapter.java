@@ -5,11 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import xyz.viseator.anonymouscard.data.DataPackage;
-import xyz.viseator.anonymouscard.ui.MainFragment;
 
 /**
  * Created by viseator on 2016/12/20.
