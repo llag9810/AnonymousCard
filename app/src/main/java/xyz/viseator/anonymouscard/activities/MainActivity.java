@@ -28,12 +28,14 @@ import xyz.viseator.anonymouscard.data.UDPDataPackage;
 import xyz.viseator.anonymouscard.network.ComUtil;
 import xyz.viseator.anonymouscard.network.SingleUtil;
 import xyz.viseator.anonymouscard.ui.MainFragment;
+import xyz.viseator.anonymouscard.ui.MyMessageFragment;
 
 public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
     private int cardId = 0;
-    private MainFragment mainFragment, mainFragment1, mainFragment2;
+    private MainFragment mainFragment, mainFragment1;
+    private MyMessageFragment mainFragment2;
     private List<Fragment> fragments;
     private ViewPagerAdapter viewPagerAdapter;
     @BindView(R.id.view_pager)
@@ -81,8 +83,7 @@ public class MainActivity extends FragmentActivity {
         mainFragment.setName("主页");
         mainFragment1 = new MainFragment();
         mainFragment1.setName("次页");
-        mainFragment2 = new MainFragment();
-        mainFragment2.setName("三页");
+        mainFragment2 = new MyMessageFragment();
         fragments.add(mainFragment);
         fragments.add(mainFragment1);
         fragments.add(mainFragment2);
