@@ -2,6 +2,8 @@ package xyz.viseator.anonymouscard.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,27 +17,40 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.data.DataPackage;
-import xyz.viseator.anonymouscard.ui.ViewPagerAdapter;
+import xyz.viseator.anonymouscard.adapter.ViewPagerAdapter;
+import xyz.viseator.anonymouscard.network.ComUtil;
+import xyz.viseator.anonymouscard.network.SingleUtil;
 
 public class MainActivity extends AppCompatActivity {
     private static final int SEND_CARD = 1;
+    private ComUtil comUtil=null;
+    private SingleUtil singleUtil=null;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
     private ArrayList<DataPackage> dataPackages;
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case ComUtil.BROADCAST_PORT:   //TODO:加入收到的UDPDataPackage
+                    break;
+                case SingleUtil.SINGLE_PORT:   //TODO：处理收到的DatePackage
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(MainActivity.this);
-
         dataPackages = new ArrayList<>();
-
         initViews();
     }
-
     private void initViews() {
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), this));
         tabLayout.setupWithViewPager(viewPager);
@@ -50,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setCustomView(view1);
         tabLayout.getTabAt(1).setCustomView(view2);
         tabLayout.getTabAt(2).setCustomView(view3);
+
+        comUtil=new ComUtil(handler);
+        singleUtil=new SingleUtil(handler);
     }
 
     @OnClick(R.id.float_button)
@@ -65,5 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    private void init(){
+        comUtil.startRecieveMsg();
+        singleUtil.startRecieveMsg();
     }
 }
