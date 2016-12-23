@@ -33,7 +33,7 @@ public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
     private int cardId = 0;
-    private MainFragment mainFragment,mainFragment1,mainFragment2;
+    private MainFragment mainFragment, mainFragment1, mainFragment2;
     private List<Fragment> fragments;
     private ViewPagerAdapter viewPagerAdapter;
     @BindView(R.id.view_pager)
@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case ComUtil.BROADCAST_PORT:
                     UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.byteToObject((byte[]) msg.obj);
                     udpDataPackages.add(udpDataPackage);
@@ -58,7 +58,7 @@ public class MainActivity extends FragmentActivity {
                     Log.d(TAG, "handleMessage: Receive UDP");
                     break;
                 case SingleUtil.SINGLE_PORT:
-
+                    DataPackage dataPackage = (DataPackage) msg.obj;
                     break;
             }
         }
@@ -77,7 +77,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initViews() {
-        fragments=new ArrayList<>();
+        fragments = new ArrayList<>();
         mainFragment = new MainFragment();
         mainFragment.setName("主页");
         mainFragment1 = new MainFragment();
@@ -87,7 +87,7 @@ public class MainActivity extends FragmentActivity {
         fragments.add(mainFragment);
         fragments.add(mainFragment1);
         fragments.add(mainFragment2);
-        viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager(),MainActivity.this,fragments);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), MainActivity.this, fragments);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -130,7 +130,6 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-
     public UDPDataPackage getDataById(String id) {
         for (UDPDataPackage udpDataPackage : udpDataPackages) {
             if (Objects.equals(udpDataPackage.getId(), id)) {
@@ -146,10 +145,14 @@ public class MainActivity extends FragmentActivity {
         return udpDataPackages;
     }
 
+    public ArrayList<DataPackage> getDataPackages() {
+        return dataPackages;
+    }
+
     private void init() {
         comUtil = new ComUtil(handler);
         comUtil.startRecieveMsg();
-        singleUtil=new SingleUtil(handler,dataStore);
+        singleUtil = new SingleUtil(handler, dataStore);
         singleUtil.startRecieveMsg();
     }
 

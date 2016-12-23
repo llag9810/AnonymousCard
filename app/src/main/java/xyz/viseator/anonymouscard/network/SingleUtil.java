@@ -37,6 +37,15 @@ public class SingleUtil {
         this.handler = handler;
     }
 
+    public SingleUtil(Handler handler) {
+        try {
+            singleSocket = new DatagramSocket(SINGLE_PORT);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        this.handler = handler;
+    }
+
     public SingleUtil() {
         try {
             singleSocket = new DatagramSocket(SINGLE_PORT);
@@ -50,7 +59,7 @@ public class SingleUtil {
         thread.start();
     }
 
-    public void sendSingle0(final byte[] buff, final String ipAddress) {
+    public void sendSingle0(final DataPackage dataPackage, final String ipAddress) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -59,13 +68,9 @@ public class SingleUtil {
                 ObjectOutputStream objectos = null;
                 try {
                     socket = new Socket(ipAddress, SINGLE_PORT);
-                    DataPackage data = new DataPackage();  //将来被替换
-                    data.setContent("Hello World");
-                    data.setSign(0);                                     //将来被替换
-                    data.setBitmap(null);
                     os = socket.getOutputStream();
                     objectos = new ObjectOutputStream(os);
-                    objectos.writeObject(data);
+                    objectos.writeObject(dataPackage);
                     os.flush();
                     socket.shutdownOutput();
                 } catch (SocketException e) {
@@ -110,7 +115,7 @@ public class SingleUtil {
                     e.printStackTrace();
                 } finally {
                     try {
-                        socket.close();
+//                        socket.close();
                         os.close();
                         objectos.close();
                     } catch (IOException e) {
@@ -170,8 +175,9 @@ public class SingleUtil {
         }
 
         public void sendConcreteData(String cardId, String ipAddress) {
-            byte[] bytes = null;      //将来被替换
-            sendSingle0(bytes, ipAddress);
+            DataPackage dataPackage = dataStore.getDataById(cardId);
+            dataPackage.setSign(0);
+            sendSingle0(dataPackage, ipAddress);
         }
     }
 }

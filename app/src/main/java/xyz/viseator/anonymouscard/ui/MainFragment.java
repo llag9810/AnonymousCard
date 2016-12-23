@@ -69,4 +69,9 @@ public class MainFragment extends Fragment  {
         super.onResume();
         recyclerView.getAdapter().notifyDataSetChanged();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        ((MainActivity)getActivity()).getDataPackages().add(data.getSerializableExtra("data"))
+    }
 }

@@ -1,6 +1,9 @@
 package xyz.viseator.anonymouscard.data;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by viseator on 2016/12/23.
@@ -9,6 +12,7 @@ import java.util.ArrayList;
  */
 
 public class DataStore {
+    private static final String TAG = "wudi DataStore";
     private ArrayList<DataPackage> dataPackages;
 
     public ArrayList<DataPackage> getDataPackages() {
@@ -21,7 +25,8 @@ public class DataStore {
 
     public DataPackage getDataById(String id) {
         for (DataPackage dataPackage : dataPackages) {
-            if (dataPackage.getId() == id) {
+            if (Objects.equals(dataPackage.getId(), id)) {
+                Log.d(TAG, "getDataById: got the id data");
                 return dataPackage;
             }
         }
