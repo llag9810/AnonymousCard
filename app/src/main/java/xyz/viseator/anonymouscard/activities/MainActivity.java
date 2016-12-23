@@ -25,6 +25,7 @@ import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.DataStore;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
+import xyz.viseator.anonymouscard.data.UserInfo;
 import xyz.viseator.anonymouscard.network.ComUtil;
 import xyz.viseator.anonymouscard.network.SingleUtil;
 import xyz.viseator.anonymouscard.ui.MainFragment;
@@ -33,15 +34,19 @@ public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
     private int cardId = 0;
-    private MainFragment mainFragment, mainFragment1, mainFragment2;
+    private MainFragment mainFragment, mainFragment1,
+            mainFragment2;
     private List<Fragment> fragments;
     private ViewPagerAdapter viewPagerAdapter;
+    private UserInfo userInfo;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+
     private ArrayList<DataPackage> dataPackages;
     private ArrayList<UDPDataPackage> udpDataPackages;
+
     private ComUtil comUtil;
     private SingleUtil singleUtil;
     private DataStore dataStore;
@@ -71,6 +76,7 @@ public class MainActivity extends FragmentActivity {
         dataPackages = new ArrayList<>();
         udpDataPackages = new ArrayList<>();
         dataStore = new DataStore();
+        userInfo = new UserInfo();
         init();
         initViews();
     }
@@ -78,11 +84,8 @@ public class MainActivity extends FragmentActivity {
     private void initViews() {
         fragments = new ArrayList<>();
         mainFragment = new MainFragment();
-        mainFragment.setName("主页");
         mainFragment1 = new MainFragment();
-        mainFragment1.setName("次页");
         mainFragment2 = new MainFragment();
-        mainFragment2.setName("三页");
         fragments.add(mainFragment);
         fragments.add(mainFragment1);
         fragments.add(mainFragment2);
@@ -113,16 +116,19 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SEND_CARD) {
             if (resultCode == RESULT_OK) {
                 DataPackage dataPackage = (DataPackage) data.getSerializableExtra("data");
                 if (dataPackage != null) {
                     Log.d(TAG, "onActivityResult: Got Data");
-                    comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
+                    for (int i = 0; i < 5; i++)
+                        comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
                     dataPackages.add(dataPackage);
                     udpDataPackages.add(new UDPDataPackage(dataPackage));
                     dataStore.setDataPackages(dataPackages);
                     cardId++;
+                    userInfo.setCandys(userInfo.getCandys() - 5);
                 }
             }
         }
@@ -132,7 +138,6 @@ public class MainActivity extends FragmentActivity {
     public UDPDataPackage getDataById(String id) {
         for (UDPDataPackage udpDataPackage : udpDataPackages) {
             if (Objects.equals(udpDataPackage.getId(), id)) {
-                Log.d(TAG, "getDataById: found data");
                 return udpDataPackage;
             }
         }
@@ -151,9 +156,12 @@ public class MainActivity extends FragmentActivity {
     private void init() {
         comUtil = new ComUtil(handler);
         comUtil.startRecieveMsg();
-        singleUtil = new SingleUtil(handler, dataStore);
+        singleUtil = new SingleUtil(handler, dataStore, userInfo);
         singleUtil.startRecieveMsg();
     }
 
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
 
 }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,12 @@ import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.activities.CardDetailActivity;
 import xyz.viseator.anonymouscard.activities.MainActivity;
 import xyz.viseator.anonymouscard.adapter.MainRecyclerViewAdapter;
+import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
+import xyz.viseator.anonymouscard.data.UserInfo;
 import xyz.viseator.anonymouscard.network.ComUtil;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by viseator on 2016/12/20.
@@ -27,7 +32,8 @@ import xyz.viseator.anonymouscard.network.ComUtil;
  * viseator@gmail.com
  */
 
-public class MainFragment extends Fragment  {
+public class MainFragment extends Fragment {
+    private static final String TAG = "wudi MainFragment";
     @BindView(R.id.main_recyclerView)
     public RecyclerView recyclerView;
     String name;
@@ -56,7 +62,8 @@ public class MainFragment extends Fragment  {
             public void onItemClickListener(View view, String id) {
                 Intent intent = new Intent(getContext(), CardDetailActivity.class);
                 intent.putExtra("data", ((MainActivity) getActivity()).getDataById(id));
-                startActivityForResult(intent, 1);
+                intent.putExtra("allDataPackages", ((MainActivity) getActivity()).getDataPackages());
+                startActivityForResult(intent, 11);
             }
         });
         recyclerView.setAdapter(mainRecyclerViewAdapter);
@@ -72,6 +79,15 @@ public class MainFragment extends Fragment  {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        ((MainActivity)getActivity()).getDataPackages().add(data.getSerializableExtra("data"))
+        if (requestCode == 11) {
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "onActivityResult: addDataPackages");
+                ((MainActivity) getActivity()).getDataPackages().add(
+                        (DataPackage) data.getSerializableExtra("data"));
+                Log.d(TAG, "onActivityResult: " + ((MainActivity) getActivity()).getDataPackages().size());
+                UserInfo userInfo = ((MainActivity) getActivity()).getUserInfo();
+                userInfo.setCandys(userInfo.getCandys() - 1);
+            }
+        }
     }
 }

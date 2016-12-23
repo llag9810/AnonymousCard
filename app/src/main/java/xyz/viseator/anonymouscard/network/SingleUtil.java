@@ -10,12 +10,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.DataStore;
+import xyz.viseator.anonymouscard.data.UserInfo;
 
 /**
  * Created by yanhao on 16-12-21.
@@ -26,9 +28,10 @@ public class SingleUtil {
     private DataStore dataStore;
     public static final int SINGLE_PORT = 7817;
     private static final int DATA_LEN = 4096;
+    private UserInfo userInfo;
     private Thread threadForback;
 
-    public SingleUtil(Handler handler, DataStore dataStore) {
+    public SingleUtil(Handler handler, DataStore dataStore, UserInfo userInfo) {
         try {
             singleSocket = new DatagramSocket(SINGLE_PORT);
         } catch (SocketException e) {
@@ -36,6 +39,7 @@ public class SingleUtil {
         }
         this.dataStore = dataStore;
         this.handler = handler;
+        this.userInfo = userInfo;
     }
 
     public SingleUtil(Handler handler) {
@@ -68,19 +72,20 @@ public class SingleUtil {
                 OutputStream os = null;
                 ObjectOutputStream objectos = null;
                 try {
-                    socket = new Socket(ipAddress, SINGLE_PORT+2);
+                    socket = new Socket(ipAddress, SINGLE_PORT + 2);
                     os = socket.getOutputStream();
                     objectos = new ObjectOutputStream(os);
                     objectos.writeObject(dataPackage);
                     os.flush();
                     socket.shutdownOutput();
+                    userInfo.setCandys(userInfo.getCandys() + 1);
                 } catch (SocketException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
                     try {
-//                        socket.close();
+                        socket.close();
                         os.close();
                         objectos.close();
                     } catch (IOException e) {
@@ -100,7 +105,7 @@ public class SingleUtil {
                 OutputStream os = null;
                 ObjectOutputStream objectos = null;
                 try {
-                    Log.d(ipAddress,"11111111111111111");
+                    Log.d(ipAddress, "11111111111111111");
                     socket = new Socket(ipAddress, SINGLE_PORT);
                     DataPackage data = new DataPackage();
                     data.setSign(1);
@@ -135,7 +140,9 @@ public class SingleUtil {
         public void run() {
             ServerSocket serverSocket = null;
             try {
-                serverSocket = new ServerSocket(SINGLE_PORT);
+                serverSocket = new ServerSocket();
+                serverSocket.setReuseAddress(true);
+                serverSocket.bind(new InetSocketAddress(SINGLE_PORT));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -176,20 +183,24 @@ public class SingleUtil {
     class ReadSingleForBack implements Runnable {
         @Override
         public void run() {
-            ServerSocket serverSocket = null;
-            try {
-                serverSocket = new ServerSocket(SINGLE_PORT+2);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            boolean swh=true;
+
+            boolean swh = true;
             while (swh) {
+                ServerSocket serverSocket = null;
+                try {
+                    serverSocket = new ServerSocket();
+                    serverSocket.setReuseAddress(true);
+                    serverSocket.bind(new InetSocketAddress(SINGLE_PORT + 2));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Socket socket = null;
                 InputStream in = null;
                 ObjectInputStream objinput = null;
                 if (serverSocket != null) {
                     try {
                         socket = serverSocket.accept();
+                        socket.setReuseAddress(true);
                         in = socket.getInputStream();
                         objinput = new ObjectInputStream(in);
                         DataPackage data1 = (DataPackage) objinput.readObject();
@@ -208,7 +219,7 @@ public class SingleUtil {
                             objinput.close();
                             in.close();
                             socket.close();
-                            swh=false;
+                            swh = false;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

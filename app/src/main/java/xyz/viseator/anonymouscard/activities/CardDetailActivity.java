@@ -1,5 +1,6 @@
 package xyz.viseator.anonymouscard.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +26,7 @@ public class CardDetailActivity extends AppCompatActivity {
     private SingleUtil singleUtil;
     private DataPackage dataPackage;
     private UDPDataPackage receivedDataPackage;
+    private ArrayList<DataPackage> dataPackages;
     @BindView(R.id.detail_content)
     TextView content;
     @BindView(R.id.detail_image)
@@ -37,8 +42,10 @@ public class CardDetailActivity extends AppCompatActivity {
                 dataPackage = (DataPackage) msg.obj;
                 content.setText(dataPackage.getContent());
                 title.setText(dataPackage.getTitle());
-                if (dataPackage.getBitmap() == null) Log.d(TAG, "handleMessage: Error bitmap");
-                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap() ));
+                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+                Intent intent = new Intent();
+                intent.putExtra("data", dataPackage);
+                setResult(RESULT_OK, intent);
             }
         }
     };
@@ -49,12 +56,24 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
         ButterKnife.bind(this);
-        init();
-        SingleUtil singleUtil = new SingleUtil();
+        dataPackages = (ArrayList<DataPackage>) (getIntent().getSerializableExtra("allDataPackages"));
         receivedDataPackage = (UDPDataPackage) (getIntent().getSerializableExtra("data"));
-        singleUtil.sendSingle1(receivedDataPackage.getIpAddress(),
-                receivedDataPackage.getId(), GetNetworkInfo.getIp(this));
-
+        boolean contains = false;
+        for (DataPackage dataPackage : dataPackages) {
+            if (Objects.equals(receivedDataPackage.getId(), dataPackage.getId())) {
+                contains = true;
+                content.setText(dataPackage.getContent());
+                title.setText(dataPackage.getTitle());
+                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+                break;
+            }
+        }
+        if (!contains) {
+            init();
+            SingleUtil singleUtil1 = new SingleUtil();
+            singleUtil1.sendSingle1(receivedDataPackage.getIpAddress(),
+                    receivedDataPackage.getId(), GetNetworkInfo.getIp(this));
+        }
     }
 
 
