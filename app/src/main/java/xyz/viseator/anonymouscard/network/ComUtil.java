@@ -24,7 +24,7 @@ public class ComUtil {
     private DatagramPacket inPacket = new DatagramPacket(inBuff, inBuff.length);//用于接受对象的packet
     private DatagramPacket outPacket = null;//用于发送对象的packet
     private Handler handler;
-
+    private static final String TAG = "wudi ComUtil";
     public ComUtil(Handler handler) {
         this.handler = handler;
     }
@@ -37,6 +37,7 @@ public class ComUtil {
                 try {
                     outPacket.setData(msg);
                     socket.send(outPacket);
+                    Log.d(TAG, "run: Send UDP");
                 }
                 // 捕捉异常
                 catch (IOException ex) {

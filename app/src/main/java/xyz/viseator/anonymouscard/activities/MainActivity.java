@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity {
                     UDPDataPackage udpDataPackage = (UDPDataPackage) ConvertData.byteToObject((byte[]) msg.obj);
                     udpDataPackages.add(udpDataPackage);
                     mainFragment.recyclerView.getAdapter().notifyDataSetChanged();
+                    Log.d(TAG, "handleMessage: Receive UDP");
                     break;
                 case SingleUtil.SINGLE_PORT:
                     Toast.makeText(MainActivity.this,"收到打包",Toast.LENGTH_SHORT).show();
@@ -68,11 +69,23 @@ public class MainActivity extends FragmentActivity {
         ButterKnife.bind(MainActivity.this);
         dataPackages = new ArrayList<>();
         udpDataPackages = new ArrayList<>();
-        initViews();
         init();
+        initViews();
     }
 
     private void initViews() {
+        fragments=new ArrayList<>();
+        mainFragment = new MainFragment();
+        mainFragment.setName("主页");
+        mainFragment1 = new MainFragment();
+        mainFragment1.setName("次页");
+        mainFragment2 = new MainFragment();
+        mainFragment2.setName("三页");
+        fragments.add(mainFragment);
+        fragments.add(mainFragment1);
+        fragments.add(mainFragment2);
+        viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager(),MainActivity.this,fragments);
+        viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         View view1 = getLayoutInflater().inflate(R.layout.tab_view, null);
@@ -86,18 +99,7 @@ public class MainActivity extends FragmentActivity {
         tabLayout.getTabAt(1).setCustomView(view2);
         tabLayout.getTabAt(2).setCustomView(view3);
 
-        fragments=new ArrayList<>();
-        mainFragment = new MainFragment();
-        mainFragment.setName("主页");
-        mainFragment1 = new MainFragment();
-        mainFragment1.setName("次页");
-        mainFragment2 = new MainFragment();
-        mainFragment2.setName("三页");
-        fragments.add(mainFragment);
-        fragments.add(mainFragment1);
-        fragments.add(mainFragment2);
-        viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager(),MainActivity.this,fragments);
-        viewPager.setAdapter(viewPagerAdapter);
+
     }
 
     @OnClick(R.id.float_button)
@@ -114,7 +116,7 @@ public class MainActivity extends FragmentActivity {
                 DataPackage dataPackage = (DataPackage) data.getSerializableExtra("data");
                 if (dataPackage != null) {
                     Log.d(TAG, "onActivityResult: Got Data");
-//                    comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
+                    comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
                     dataPackages.add(dataPackage);
                     udpDataPackages.add(new UDPDataPackage(dataPackage));
                     cardId++;
