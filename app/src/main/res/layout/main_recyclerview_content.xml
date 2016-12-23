@@ -34,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
                 android:paddingTop="10dp"
+                android:src="@drawable/card2"
                 />
 
         </RelativeLayout>

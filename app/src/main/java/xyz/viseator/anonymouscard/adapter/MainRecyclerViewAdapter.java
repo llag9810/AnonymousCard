@@ -21,6 +21,7 @@ import xyz.viseator.anonymouscard.data.UDPDataPackage;
 
 public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.ItemViewHolder>
         implements View.OnClickListener {
+    private static final String TAG = "wudi Adapter";
     private Context context;
     private List<UDPDataPackage> lists;
     public OnItemClickListener mListener;
@@ -42,6 +43,23 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
         UDPDataPackage item = lists.get(position);
         holder.title.setText(item.getTitle());
         holder.itemView.setTag(item.getId());
+        holder.itemView.setOnClickListener(this);
+        switch (position % 4) {
+            case 0:
+                holder.imageView.setImageResource(R.drawable.card1);
+                break;
+            case 1:
+                holder.imageView.setImageResource(R.drawable.card2);
+                break;
+            case 2:
+                holder.imageView.setImageResource(R.drawable.card3);
+                break;
+            case 3:
+                holder.imageView.setImageResource(R.drawable.card4);
+                break;
+            default:
+
+        }
     }
 
     @Override
