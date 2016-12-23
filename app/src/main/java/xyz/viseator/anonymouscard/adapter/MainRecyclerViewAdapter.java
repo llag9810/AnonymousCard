@@ -59,18 +59,17 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView title, source;
+        TextView title;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.content_logo);
+            imageView = (ImageView) itemView.findViewById(R.id.card_image);
             title = (TextView) itemView.findViewById(R.id.content_title);
-            source = (TextView) itemView.findViewById(R.id.content_source);
         }
     }
 
-    public static interface OnItemClickListener {
-        public void onItemClickListener(View view, String id);
+    public interface OnItemClickListener {
+        void onItemClickListener(View view, String id);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

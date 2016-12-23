@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:background="@color/mainBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -8,52 +7,34 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginTop="10dp"
-        app:cardElevation="4dp"
-        android:backgroundTint="#fafafa"
+        android:layout_height="wrap_content"
         >
 
         <RelativeLayout
+            android:background="@color/mainBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp">
-
-            <ImageView
-                android:id="@+id/content_logo"
-                android:src="@drawable/ic_action_achievement"
-                android:layout_width="25dp"
-                android:layout_height="25dp"/>
-
-            <TextView
-                android:id="@+id/content_source"
-                android:text="默认昵称"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_alignBottom="@+id/content_logo"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/content_logo"
-                android:gravity="center"
-                android:textColor="@color/zhihuwordgray"
-                android:textSize="15sp"
-                />
+            >
 
             <TextView
                 android:id="@+id/content_title"
                 android:text="默认标题"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/content_logo"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/Black"
-                android:textSize="17sp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/DarkGray"
+                android:textSize="21sp"
                 android:textStyle="bold"
                 />
 
+            <ImageView
+                android:id="@+id/card_image"
+                android:layout_below="@id/content_title"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:paddingTop="10dp"
+                />
 
         </RelativeLayout>
 
