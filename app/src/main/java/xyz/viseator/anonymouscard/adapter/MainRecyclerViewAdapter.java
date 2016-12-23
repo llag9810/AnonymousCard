@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.util.List;
+
 import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
 
@@ -18,28 +20,28 @@ import xyz.viseator.anonymouscard.data.UDPDataPackage;
  */
 
 public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.ItemViewHolder>
-                                    implements View.OnClickListener{
+        implements View.OnClickListener {
     private Context context;
     private List<UDPDataPackage> lists;
     public OnItemClickListener mListener;
 
-    public MainRecyclerViewAdapter(Context context,List<UDPDataPackage> lists) {
+    public MainRecyclerViewAdapter(Context context, List<UDPDataPackage> lists) {
         this.context = context;
-        this.lists=lists;
+        this.lists = lists;
     }
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=LayoutInflater.from(context).inflate(R.layout.main_recyclerview_content,parent,false);
-        ItemViewHolder viewHolder=new ItemViewHolder(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.main_recyclerview_content, parent, false);
+        ItemViewHolder viewHolder = new ItemViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        UDPDataPackage item=lists.get(position);
+        UDPDataPackage item = lists.get(position);
         holder.title.setText(item.getTitle());
-        holder.title.setTag(position);
+        holder.itemView.setTag(item.getId());
     }
 
     @Override
@@ -49,28 +51,29 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
     @Override
     public void onClick(View view) {
-        if(mListener!=null){
-            mListener.onItemClickListener(view,(int)view.getTag());
+        if (mListener != null) {
+            mListener.onItemClickListener(view, (String) view.getTag());
         }
     }
 
 
-    static class ItemViewHolder extends RecyclerView.ViewHolder{
+    static class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView title,source;
+        TextView title, source;
+
         public ItemViewHolder(View itemView) {
             super(itemView);
-            imageView=(ImageView)itemView.findViewById(R.id.content_logo);
-            title=(TextView)itemView.findViewById(R.id.content_title);
-            source=(TextView)itemView.findViewById(R.id.content_source);
+            imageView = (ImageView) itemView.findViewById(R.id.content_logo);
+            title = (TextView) itemView.findViewById(R.id.content_title);
+            source = (TextView) itemView.findViewById(R.id.content_source);
         }
     }
 
-    public static  interface OnItemClickListener{
-        public void onItemClickListener(View view,int position);
+    public static interface OnItemClickListener {
+        public void onItemClickListener(View view, String id);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
-        this.mListener=listener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mListener = listener;
     }
 }

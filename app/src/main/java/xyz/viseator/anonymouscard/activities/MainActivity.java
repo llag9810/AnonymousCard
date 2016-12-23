@@ -2,11 +2,9 @@ package xyz.viseator.anonymouscard.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,35 +17,21 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.viseator.anonymouscard.R;
 import xyz.viseator.anonymouscard.adapter.ViewPagerAdapter;
-import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.data.UDPDataPackage;
-import xyz.viseator.anonymouscard.network.ComUtil;
-import xyz.viseator.anonymouscard.network.SingleUtil;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
     private int cardId = 0;
-    private ComUtil comUtil = null;
-    private SingleUtil singleUtil = null;
+
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
     private ArrayList<DataPackage> dataPackages;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case ComUtil.BROADCAST_PORT:   //TODO:加入收到的UDPDataPackage
-                    break;
-                case SingleUtil.SINGLE_PORT:   //TODO：处理收到的DatePackage
-                    break;
-            }
-        }
-    };
+    private ArrayList<UDPDataPackage> udpDataPackages;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(MainActivity.this);
 
         dataPackages = new ArrayList<>();
+        udpDataPackages = new ArrayList<>();
 
         initViews();
     }
@@ -92,21 +77,16 @@ public class MainActivity extends AppCompatActivity {
                 DataPackage dataPackage = (DataPackage) data.getSerializableExtra("data");
                 if (dataPackage != null) {
                     Log.d(TAG, "onActivityResult: Got Data");
-                    comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
+//                    comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
                     dataPackages.add(dataPackage);
+                    udpDataPackages.add(new UDPDataPackage(dataPackage));
                     cardId++;
                 }
             }
         }
     }
 
-    private void init() {
-        comUtil = new ComUtil(handler);
-        singleUtil = new SingleUtil(handler);
-        comUtil.startRecieveMsg();
-        singleUtil.startRecieveMsg();
 
-    }
 
     public DataPackage getDataById(String id) {
         for (DataPackage dataPackage : dataPackages) {
@@ -115,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    public ArrayList<DataPackage> getDataPackages() {
-        return dataPackages;
+    public ArrayList<UDPDataPackage> getUdpDataPackages() {
+        return udpDataPackages;
     }
 }

@@ -75,15 +75,16 @@
 
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <ImageView
             android:id="@+id/send_float_button"
+            android:clickable="true"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@color/colorPrimaryDark"
+            android:src="@drawable/float_button_send"
             />
 
     </RelativeLayout>
