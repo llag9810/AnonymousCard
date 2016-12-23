@@ -93,7 +93,9 @@ public class MainActivity extends FragmentActivity {
     private void initViews() {
         fragments = new ArrayList<>();
         mainFragment = new MainFragment();
+        mainFragment.setFragmentId(1);
         mainFragment1 = new MainFragment();
+        mainFragment1.setFragmentId(2);
         mainFragment2 = new MyMessageFragment();
 
         fragments.add(mainFragment);

@@ -41,6 +41,15 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
     private ArrayList<UDPDataPackage> udpDataPackages;
     private ComUtil comUtil;
     private String mId;
+    private int fragmentId;
+
+    public int getFragmentId() {
+        return fragmentId;
+    }
+
+    public void setFragmentId(int fragmentId) {
+        this.fragmentId = fragmentId;
+    }
 
     public String getName() {
         return name;
@@ -58,7 +67,17 @@ public class MainFragment extends Fragment implements MainRecyclerViewAdapter.On
         udpDataPackages = ((MainActivity) getActivity()).getUdpDataPackages();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.hasFixedSize();
-        MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
+        MainRecyclerViewAdapter mainRecyclerViewAdapter;
+        if (fragmentId==1) {
+            mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
+        } else {
+            udpDataPackages = new ArrayList<>();
+            for (DataPackage dataPackage : ((MainActivity) getActivity()).getDataPackages()) {
+                UDPDataPackage udpDataPackage = new UDPDataPackage(dataPackage);
+                udpDataPackages.add(udpDataPackage);
+            }
+            mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
+        }
         mainRecyclerViewAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(mainRecyclerViewAdapter);
 
