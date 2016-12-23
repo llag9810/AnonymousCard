@@ -221,7 +221,6 @@ public class MainActivity extends FragmentActivity {
         SaveData.writeToFile(this, userInfo, "userInfo");
     }
 
-
     private void getDataFromFile() {
         ArrayList<DataPackage> dataPackages1 = (ArrayList<DataPackage>) SaveData.readFromFile(this, "dataPackages");
         if (dataPackages1 == null) {

@@ -83,5 +83,4 @@ public class CardDetailActivity extends AppCompatActivity {
         }
     }
 
-
 }
