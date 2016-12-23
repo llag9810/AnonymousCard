@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.viseator.anonymouscard.R;
+import xyz.viseator.anonymouscard.data.ConvertData;
 import xyz.viseator.anonymouscard.data.DataPackage;
 import xyz.viseator.anonymouscard.network.GetNetworkInfo;
 
@@ -48,7 +49,9 @@ public class SendNewCardActivity extends AppCompatActivity {
         dataPackage.setContent(cardContent.getText().toString());
         dataPackage.setTitle(cardTitle.getText().toString());
         dataPackage.setId(getIntent().getIntExtra("cardId", -1));
-
+        if (null!=bitmap) {
+            dataPackage.setBitmap(ConvertData.bitmapToByte(bitmap));
+        }
         Intent intent = new Intent();
         intent.putExtra("data", dataPackage);
         setResult(RESULT_OK, intent);

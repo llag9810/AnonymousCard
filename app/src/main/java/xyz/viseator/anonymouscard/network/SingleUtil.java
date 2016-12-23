@@ -68,7 +68,7 @@ public class SingleUtil {
                 OutputStream os = null;
                 ObjectOutputStream objectos = null;
                 try {
-                    socket = new Socket(ipAddress, SINGLE_PORT);
+                    socket = new Socket(ipAddress, SINGLE_PORT+2);
                     os = socket.getOutputStream();
                     objectos = new ObjectOutputStream(os);
                     objectos.writeObject(dataPackage);
@@ -80,7 +80,7 @@ public class SingleUtil {
                     e.printStackTrace();
                 } finally {
                     try {
-                        socket.close();
+//                        socket.close();
                         os.close();
                         objectos.close();
                     } catch (IOException e) {
@@ -177,7 +177,7 @@ public class SingleUtil {
         public void run() {
             ServerSocket serverSocket = null;
             try {
-                serverSocket = new ServerSocket(SINGLE_PORT);
+                serverSocket = new ServerSocket(SINGLE_PORT+2);
             } catch (IOException e) {
                 e.printStackTrace();
             }

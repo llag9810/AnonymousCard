@@ -27,20 +27,20 @@ public class CardDetailActivity extends AppCompatActivity {
     ImageView imageView;
     @BindView(R.id.detail_title)
     TextView title;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == SingleUtil.SINGLE_PORT) {
                 Log.d(TAG, "handleMessage: Receive Data");
                 dataPackage = (DataPackage) msg.obj;
-                content.setText(dataPackage.getContent());
-                title.setText(dataPackage.getTitle());
-                imageView.setImageBitmap((ConvertData.byteToBitmap(dataPackage.getBitmap())));
+//                content.setText(dataPackage.getContent());
+//                title.setText(dataPackage.getTitle());
+                if (dataPackage.getBitmap() == null) Log.d(TAG, "handleMessage: Error bitmap");
+                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap() ));
             }
         }
     };
-
 
 
     @Override
