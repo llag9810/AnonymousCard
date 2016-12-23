@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), this));
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), this, dataPackages));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         View view1 = getLayoutInflater().inflate(R.layout.tab_view, null);
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 DataPackage dataPackage = (DataPackage) data.getSerializableExtra("data");
                 if (dataPackage != null) {
                     Log.d(TAG, "onActivityResult: Got Data");
-                    ComUtil comUtil = new ComUtil(new Handler()); // use comUtil
                     comUtil.broadCast(ConvertData.objectToByte(new UDPDataPackage(dataPackage)));
                     dataPackages.add(dataPackage);
                     cardId++;
