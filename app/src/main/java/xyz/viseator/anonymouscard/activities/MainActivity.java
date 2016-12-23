@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ import xyz.viseator.anonymouscard.ui.MyMessageFragment;
 public class MainActivity extends FragmentActivity {
     private static final int SEND_CARD = 1;
     private static final String TAG = "wudi MainActivity";
-    private int cardId ;
+    private int cardId;
     private MainFragment mainFragment, mainFragment1;
     private MyMessageFragment mainFragment2;
     private List<Fragment> fragments;
@@ -71,7 +72,9 @@ public class MainActivity extends FragmentActivity {
                         Log.d(TAG, "handleMessage: Receive UDP");
                     }
                     break;
-
+                case TcpServer.RECEIVE_REQUEST:
+                    Toast.makeText(MainActivity.this, "贺卡被打开，收到糖果一个", Toast.LENGTH_SHORT).show();
+                    userInfo.setCandys(userInfo.getCandys() + 1);
             }
         }
     };
@@ -84,7 +87,6 @@ public class MainActivity extends FragmentActivity {
         getDataFromFile();
         dataStore = new DataStore();
         dataStore.setDataPackages(dataPackages);
-        userInfo = new UserInfo();
         init();
         initViews();
         context = MainActivity.this;
@@ -97,6 +99,7 @@ public class MainActivity extends FragmentActivity {
         mainFragment1 = new MainFragment();
         mainFragment1.setFragmentId(2);
         mainFragment2 = new MyMessageFragment();
+        mainFragment2.setUserInfo(userInfo);
 
         fragments.add(mainFragment);
         fragments.add(mainFragment1);
@@ -128,7 +131,7 @@ public class MainActivity extends FragmentActivity {
                         toolbarTitle.setText("我的贺卡");
                         break;
                     case 2:
-                        toolbarTitle.setText("我的收获");
+                        toolbarTitle.setText("我的女装");
                         break;
                     default:
 
@@ -197,7 +200,7 @@ public class MainActivity extends FragmentActivity {
 
     private void init() {
         tcpServer = new TcpServer(dataStore);
-        tcpServer.startServer();
+        tcpServer.startServer(handler);
         comUtil = new ComUtil(handler);
         comUtil.startRecieveMsg();
 
@@ -215,11 +218,12 @@ public class MainActivity extends FragmentActivity {
         SaveData.writeToFile(this, dataPackages, "dataPackages");
         SaveData.writeToFile(this, udpDataPackages, "udpDataPackages");
         SaveData.writeToFile(this, cardId, "cardId");
+        SaveData.writeToFile(this, userInfo, "userInfo");
     }
 
 
     private void getDataFromFile() {
-        ArrayList<DataPackage> dataPackages1 = (ArrayList<DataPackage>)SaveData.readFromFile(this,"dataPackages");
+        ArrayList<DataPackage> dataPackages1 = (ArrayList<DataPackage>) SaveData.readFromFile(this, "dataPackages");
         if (dataPackages1 == null) {
             Log.d(TAG, "onResume: init");
             dataPackages = new ArrayList<>();
@@ -229,7 +233,7 @@ public class MainActivity extends FragmentActivity {
         }
 
 
-        ArrayList<UDPDataPackage> udpData = (ArrayList<UDPDataPackage>)SaveData.readFromFile(this,"udpDataPackages");
+        ArrayList<UDPDataPackage> udpData = (ArrayList<UDPDataPackage>) SaveData.readFromFile(this, "udpDataPackages");
         if (udpData == null) {
             Log.d(TAG, "onResume: init udp");
             udpDataPackages = new ArrayList<>();
@@ -245,6 +249,13 @@ public class MainActivity extends FragmentActivity {
         } else {
             cardId = cardNum;
             Log.d(TAG, "getDataFromFile: id:" + cardId);
+        }
+
+        UserInfo userIn = (UserInfo) SaveData.readFromFile(this, "userInfo");
+        if (userIn == null) {
+            userInfo = new UserInfo();
+        } else {
+            userInfo = userIn;
         }
     }
 }

@@ -1,5 +1,8 @@
 package xyz.viseator.anonymouscard.network;
 
+import android.os.Handler;
+import android.os.Message;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -21,8 +24,11 @@ import xyz.viseator.anonymouscard.data.UDPDataPackage;
 
 public class TcpServer {
     public static final int SERVER_PORT = 7889;
+    public static final int RECEIVE_REQUEST = 110;
     private DataStore dataStore;
     private Thread thread;
+    private Handler handler;
+
 
     public TcpServer(DataStore dataStore) {
         this.dataStore = dataStore;
@@ -48,6 +54,11 @@ public class TcpServer {
 
                     UDPDataPackage udpDataPackage = (UDPDataPackage) objectInputStream.readObject();
                     DataPackage dataPackage = dataStore.getDataById(udpDataPackage.getId());
+                    if (dataPackage != null) {
+                        Message message = new Message();
+                        message.what = RECEIVE_REQUEST;
+                        handler.sendMessage(message);
+                    }
 
                     OutputStream outputStream = socket.getOutputStream();
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -67,7 +78,8 @@ public class TcpServer {
         }
     }
 
-    public void startServer() {
+    public void startServer(Handler handler) {
+        this.handler = handler;
         thread = new Thread(new RunServer());
         thread.start();
     }
