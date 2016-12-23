@@ -1,6 +1,7 @@
 package xyz.viseator.anonymouscard.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,11 +27,11 @@ public class CardDetailActivity extends AppCompatActivity {
     private DataPackage dataPackage;
     private UDPDataPackage receivedDataPackage;
     private ArrayList<DataPackage> dataPackages;
-    @BindView(R.id.detail_content)
+    @BindView(R.id.content)
     TextView content;
-    @BindView(R.id.detail_image)
+    @BindView(R.id.img)
     ImageView imageView;
-    @BindView(R.id.detail_title)
+    @BindView(R.id.title)
     TextView title;
     private Handler handler = new Handler() {
         @Override
@@ -41,7 +42,10 @@ public class CardDetailActivity extends AppCompatActivity {
                 dataPackage = (DataPackage) msg.obj;
                 content.setText(dataPackage.getContent());
                 title.setText(dataPackage.getTitle());
-                imageView.setImageBitmap(ConvertData.byteToBitmap(dataPackage.getBitmap()));
+                Bitmap bitmap=ConvertData.byteToBitmap(dataPackage.getBitmap());
+                if(bitmap!=null){
+                    imageView.setImageBitmap(bitmap);
+                }
                 Intent intent = new Intent();
                 intent.putExtra("data", dataPackage);
                 setResult(RESULT_OK, intent);
@@ -53,7 +57,7 @@ public class CardDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_detail);
+        setContentView(R.layout.layout_show_content);
         ButterKnife.bind(this);
         dataPackages = (ArrayList<DataPackage>) (getIntent().getSerializableExtra("allDataPackages"));
         receivedDataPackage = (UDPDataPackage) (getIntent().getSerializableExtra("data"));
