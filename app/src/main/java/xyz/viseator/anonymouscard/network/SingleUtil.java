@@ -26,6 +26,7 @@ public class SingleUtil {
     private DataStore dataStore;
     public static final int SINGLE_PORT = 7817;
     private static final int DATA_LEN = 4096;
+    private Thread threadForback;
 
     public SingleUtil(Handler handler, DataStore dataStore) {
         try {
@@ -151,13 +152,7 @@ public class SingleUtil {
                         if (sign == 1) {
                             Log.d("信息:", "收到请求大包");
                             sendConcreteData(data1.getId(), data1.getIp());
-                        } else {
-                            Message msg = new Message();
-                            msg.what = SINGLE_PORT;
-                            msg.obj = data1;
-                            handler.sendMessage(msg);
                         }
-
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     } finally {
@@ -172,6 +167,56 @@ public class SingleUtil {
                     }
                 }
             }
+        }
+        class ReadSingleForBack implements Runnable {
+            @Override
+            public void run() {
+                ServerSocket serverSocket = null;
+                try {
+                    serverSocket = new ServerSocket(SINGLE_PORT);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                while (true) {
+                    Socket socket = null;
+                    InputStream in = null;
+                    ObjectInputStream objinput = null;
+                    if (serverSocket != null) {
+                        try {
+                            socket = serverSocket.accept();
+                            in = socket.getInputStream();
+                            objinput = new ObjectInputStream(in);
+                            DataPackage data1 = (DataPackage) objinput.readObject();
+                            int sign = data1.getSign();
+                            if (sign == 0) {
+                                Log.d("信息:", "收到请求大包");
+                                sendConcreteData(data1.getId(), data1.getIp());
+                            }
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                socket.shutdownOutput();
+                                objinput.close();
+                                in.close();
+                                socket.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        public void startRecieveMsgForBack(){
+            threadForback=new Thread(new ReadSingleForBack());
+            threadForback.start();
+        }
+
+        public void closeThreadForBack(){
+            threadForback.destroy();
         }
 
         public void sendConcreteData(String cardId, String ipAddress) {
