@@ -50,4 +50,18 @@ public class ConvertData {
     public static Bitmap byteToBitmap(byte[] bytes) {
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
+
+
+    public static Bitmap scaleDownBitmap(Bitmap photo) {
+        float scale;
+        if (photo.getHeight() > photo.getWidth())
+            scale = (float) 640 / photo.getHeight();
+        else
+            scale = (float) 480 / photo.getWidth();
+
+        int h = (int) (photo.getHeight() * scale);
+        int w = (int) (photo.getWidth() * scale);
+        photo = Bitmap.createScaledBitmap(photo, w, h, true);
+        return photo;
+    }
 }

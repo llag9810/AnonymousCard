@@ -25,6 +25,8 @@ public class SendNewCardActivity extends AppCompatActivity {
 
     private static final int GET_IMAGE = 1;
     private static final String TAG = "wudi SendNewCard";
+    private Uri uri;
+    private Bitmap newBitmap;
     Bitmap bitmap;
     @BindView(R.id.send_image)
     ImageView imageView;
@@ -49,7 +51,7 @@ public class SendNewCardActivity extends AppCompatActivity {
         dataPackage.setContent(cardContent.getText().toString());
         dataPackage.setTitle(cardTitle.getText().toString());
         dataPackage.setId(getIntent().getIntExtra("cardId", -1));
-        if (null!=bitmap) {
+        if (null != bitmap) {
             dataPackage.setBitmap(ConvertData.bitmapToByte(bitmap));
         }
         Intent intent = new Intent();
@@ -69,11 +71,15 @@ public class SendNewCardActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            Uri uri = data.getData();
+            uri = data.getData();
             Log.d(TAG, "onActivityResult: " + uri.toString());
             ContentResolver cr = this.getContentResolver();
             try {
                 bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                if (bitmap.getWidth() > 480 || bitmap.getHeight() > 640) {
+                    bitmap = ConvertData.scaleDownBitmap(bitmap);
+                }
+                Log.d(TAG, "onActivityResult: " + bitmap.getWidth() + " " + bitmap.getHeight());
                 imageView.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "onActivityResult: error");
