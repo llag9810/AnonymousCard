@@ -1,5 +1,6 @@
 package xyz.viseator.anonymouscard.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,6 +48,7 @@ public class MainActivity extends FragmentActivity {
     private ComUtil comUtil;
     private SingleUtil singleUtil;
     private DataStore dataStore;
+    public static Context context;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -75,6 +77,7 @@ public class MainActivity extends FragmentActivity {
         dataStore = new DataStore();
         init();
         initViews();
+        context=MainActivity.this;
     }
 
     private void initViews() {

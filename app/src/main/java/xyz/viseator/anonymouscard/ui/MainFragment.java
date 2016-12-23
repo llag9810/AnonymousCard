@@ -27,12 +27,14 @@ import xyz.viseator.anonymouscard.network.ComUtil;
  * viseator@gmail.com
  */
 
-public class MainFragment extends Fragment  {
+public class MainFragment extends Fragment
+                        implements MainRecyclerViewAdapter.OnItemClickListener{
     @BindView(R.id.main_recyclerView)
     public RecyclerView recyclerView;
     String name;
     private ArrayList<UDPDataPackage> udpDataPackages;
     private ComUtil comUtil;
+    private String mId;
 
     public String getName() {
         return name;
@@ -51,14 +53,7 @@ public class MainFragment extends Fragment  {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.hasFixedSize();
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(), udpDataPackages);
-        mainRecyclerViewAdapter.setOnItemClickListener(new MainRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClickListener(View view, String id) {
-                Intent intent = new Intent(getContext(), CardDetailActivity.class);
-                intent.putExtra("data", ((MainActivity) getActivity()).getDataById(id));
-                startActivityForResult(intent, 1);
-            }
-        });
+        mainRecyclerViewAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(mainRecyclerViewAdapter);
 
         return view;
@@ -73,5 +68,18 @@ public class MainFragment extends Fragment  {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        ((MainActivity)getActivity()).getDataPackages().add(data.getSerializableExtra("data"))
+    }
+
+    public void sendRequest(){
+        Intent intent = new Intent(getContext(), CardDetailActivity.class);
+        intent.putExtra("data", ((MainActivity) getActivity()).getDataById(mId));
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    public void onItemClickListener(View view, String id) {
+        mId=id;
+        CustomDialog dialog=new CustomDialog(getContext(),R.style.dialog,MainFragment.this);
+        dialog.show();
     }
 }
