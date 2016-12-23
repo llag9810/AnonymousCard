@@ -37,10 +37,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return mainFragment;
             case 1:
                 MainFragment mainFragment1 = new MainFragment();
+                mainFragment1.setDataPackages(dataPackages);
                 mainFragment1.setName("次页");
                 return mainFragment1;
             case 2:
                 MainFragment mainFragment2 = new MainFragment();
+                mainFragment2.setDataPackages(dataPackages);
                 mainFragment2.setName("三页");
                 return mainFragment2;
         }

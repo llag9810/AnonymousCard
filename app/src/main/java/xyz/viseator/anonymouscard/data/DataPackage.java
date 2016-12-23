@@ -60,6 +60,9 @@ public class DataPackage implements Serializable {
         this.id = myMac + "_" + String.valueOf(id);
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
     public byte[] getBitmap() {
         return bitmap;
     }
