@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -46,16 +46,16 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
         holder.itemView.setOnClickListener(this);
         switch (position % 4) {
             case 0:
-                holder.imageView.setImageResource(R.drawable.card1);
+                holder.imageView.setBackgroundResource(R.drawable.card1);
                 break;
             case 1:
-                holder.imageView.setImageResource(R.drawable.card2);
+                holder.imageView.setBackgroundResource(R.drawable.card2);
                 break;
             case 2:
-                holder.imageView.setImageResource(R.drawable.card3);
+                holder.imageView.setBackgroundResource(R.drawable.card3);
                 break;
             case 3:
-                holder.imageView.setImageResource(R.drawable.card4);
+                holder.imageView.setBackgroundResource(R.drawable.card4);
                 break;
             default:
 
@@ -76,12 +76,12 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        LinearLayout imageView;
         TextView title;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.card_image);
+            imageView = (LinearLayout) itemView.findViewById(R.id.card_image);
             title = (TextView) itemView.findViewById(R.id.content_title);
         }
     }

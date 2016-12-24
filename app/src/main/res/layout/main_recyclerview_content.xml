@@ -6,38 +6,40 @@
                 android:orientation="vertical">
 
     <android.support.v7.widget.CardView
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-
-        <RelativeLayout
+        <FrameLayout
             android:background="@color/mainBackground"
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="wrap_content">
+
+
+
+            <LinearLayout
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:id="@+id/card_image"
+                android:layout_width="360dp"
+                android:layout_height="222dp"
+                android:background="@drawable/card1"
+                />
 
             <TextView
                 android:id="@+id/content_title"
                 android:text="默认标题"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="90dp"
                 android:gravity="center_horizontal"
-                android:textColor="@color/DarkGray"
+                android:textColor="@color/textColor"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 />
+        </FrameLayout>
 
-            <ImageView
-                android:id="@+id/card_image"
-                android:layout_below="@id/content_title"
-                android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:paddingTop="10dp"
-                android:src="@drawable/card2"
-                />
-
-        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
