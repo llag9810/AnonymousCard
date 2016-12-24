@@ -2,9 +2,12 @@ package xyz.viseator.anonymouscard.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -83,13 +86,24 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(MainActivity.this);
-        getDataFromFile();
-        dataStore = new DataStore();
-        dataStore.setDataPackages(dataPackages);
-        init();
-        initViews();
-        context = MainActivity.this;
+        SharedPreferences prefs= this.getSharedPreferences("share",MODE_PRIVATE);
+        boolean isFirst=prefs.getBoolean("isFirst",true);
+        SharedPreferences.Editor editor=prefs.edit();
+        if (isFirst){
+            Intent intent=new Intent(MainActivity.this,BeginActivity.class);
+            editor.putBoolean("isFirst",false);
+            editor.commit();
+            startActivity(intent);
+        }else{
+            ButterKnife.bind(MainActivity.this);
+            getDataFromFile();
+            dataStore = new DataStore();
+            dataStore.setDataPackages(dataPackages);
+            init();
+            initViews();
+            context = MainActivity.this;
+        }
+
     }
 
     private void initViews() {
@@ -148,8 +162,6 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-
-
     }
 
     @OnClick(R.id.float_button)

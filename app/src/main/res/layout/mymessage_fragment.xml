@@ -36,7 +36,8 @@
                     android:paddingLeft="20dp"
                     android:text="San"
                     android:textSize="20dp"
-                    android:textColor="#000000"/>
+                    android:textColor="#000000"
+                    android:textStyle="bold"/>
                 <TextView
                     android:layout_marginBottom="30dp"
                     android:layout_width="match_parent"
@@ -45,7 +46,7 @@
                     android:id="@+id/mymotto_fragment"
                     android:gravity="center_vertical"
                     android:text="merry  christmas"
-                    android:paddingLeft="20dp"/>
+                    android:paddingLeft="20dp" />
             </LinearLayout>
 
         </LinearLayout>

@@ -2,6 +2,7 @@ package xyz.viseator.anonymouscard.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,20 +15,18 @@ import xyz.viseator.anonymouscard.R;
  */
 
 public class BeginActivity extends AppCompatActivity {
-    private Button button;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_begin);
-        button=(Button)findViewById(R.id.begin);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(v.getId()==R.id.begin){
-                    Intent intent=new Intent(BeginActivity.this,MainActivity.class);
-                    startActivity(intent);
-                }
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent=new Intent(BeginActivity.this,MainActivity.class);
+                startActivity(intent);
             }
-        });
+        },2000);
 
     }
 }
