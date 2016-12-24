@@ -65,8 +65,8 @@
         <ImageView
             android:id="@+id/float_button"
             android:clickable="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
