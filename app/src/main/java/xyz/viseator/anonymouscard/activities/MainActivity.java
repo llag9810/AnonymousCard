@@ -148,8 +148,6 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-
-
     }
 
     @OnClick(R.id.float_button)

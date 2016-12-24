@@ -17,8 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@drawable/toolbar">
-
-
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
@@ -39,6 +37,5 @@
         android:layout_below="@+id/detail_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         />
 </RelativeLayout>
